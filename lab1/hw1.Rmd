@@ -22,7 +22,7 @@ Yes, I have python and I did R last year in my synthetic biology class and stats
 
 **4. Please put a link to your GitHub repository below.**
 
-file:///Users/saniamir/Desktop/BIS15L_W2026_smir/README.html 
+
 
 **5. Make sure that your repository includes the practice file `dummy_push` from lab 1.2. If you have not done so already, please add your name to this file, knit it, and push it to your repository.**  
 
