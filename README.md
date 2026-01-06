@@ -11,5 +11,5 @@ This is Sania's page.
 ## Student Email
 smir@ucdavis.edu
 
-##Year
+## Year
 Senior, Graduation June 2026
