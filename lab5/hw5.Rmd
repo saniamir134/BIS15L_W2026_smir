@@ -1,6 +1,6 @@
 ---
 title: "Homework 5"
-author: "Your Name Here"
+author: "Sania Mir"
 date: "`r Sys.Date()`"
 output:
   html_document: 
@@ -23,31 +23,50 @@ Data: http://datadryad.org/resource/doi:10.5061/dryad.q5j65/1
 
 **1. Load the data into a new object called `homerange`.**
 ```{r}
+getwd()
+```
+
+```{r}
+homerange <- read_csv("data/Tamburelloetal_HomeRangeDatabase.csv")
 
 ```
 
 **2. What is the structure of the `homerange` data? Does it have any NA's? Do a quick exploratory analysis of your choice below.**
 ```{r}
-
+glimpse(homerange)
 ```
 
 ```{r}
-
+structure(homerange)
 ```
 
 **3. Which animal groups are represented in the data? Make a plot that shows the number in each class.**
-```{r}
 
+```{r}
+ggplot(data=homerange,
+  mapping=aes(x=class))+
+  geom_bar(mapping=aes(fill=class))
+```
+```{r}
+names(homerange)
 ```
 
 **4. Are there more carnivores or herbivores represented in the data? Make a plot that shows the number in each trophic guild.**
 ```{r}
 
+ggplot(data=homerange,
+  mapping=aes(x=trophic.guild))+
+  geom_bar(mapping=aes(fill=trophic.guild))
 ```
 
 **5. Which herbivorous mammals have homeranges greater than 1,000,000 m²? Show only the common name, order, mean homerange size, and mean body mass. Arrange the data in descending order by homerange size and show only the top 10 species.**
-```{r}
-
+#
+homerange %>% 
+  select(homerange,common.name, order,mean.mass.g,mean.hra.m2) %>% 
+  filter(homerange,mean.hra.m2>1000000) %>% 
+  slice_max(mean.hra.m2, n=10) %>% 
+  arrange(desc(mean.hra.m2))
+  
 ```
 
 **6. Which two species have the largest and smallest homerange sizes?**
