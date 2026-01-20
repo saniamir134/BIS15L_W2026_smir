@@ -126,7 +126,7 @@ select(msleep,order,genus,bodywt)
 
 4. What if we are only interested in the numeric variables? Make a new dataframe that is restricted to numerics.
 ```{r}
-select(msleep,where(is.numeric))
+m_sleep_focus <- select(msleep,where(is.numeric)) #to make new dataframe from what we are given
 
 ```
 
