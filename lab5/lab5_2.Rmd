@@ -76,37 +76,41 @@ The data are from: Gaeta J., G. Sass, S. Carpenter. 2012. Biocomplexity at North
 
 1. Load the data
 ```{r}
-
+fish <- read_csv("data/Gaeta_etal_CLC_data.csv")
 ```
 
 2. Filter the `fish` data to include the samples from lake "BO".
 ```{r}
-
+glimpse(fish)
+filter(fish, lakeid=="BO")
 ```
 
 3. Filter the data to include all lakes except "AR".
 ```{r}
+filter(fish,lakeid!="AR") 
 
 ```
 
 4. Filter the fish data to include all fish with a scalelength within 0.25 of 8.
 ```{r}
-
+filter(fish,near(scalelength, 8,tol=0.25))
 ```
 
 5. Filter the fish data to include fish with a scalelength between 2 and 4.
 ```{r}
+filter(fish,between(scalelength, 2,4))
 
 ```
 
 ## Using `filter()` on multiple conditions
 You can also use `filter()` to extract data based on multiple conditions. Below we extract the Chinstrap penguins that have a body mass greater than 4500g.
 ```{r}
-
+filter(penguins,species=="Chinstrap" & body_mass_g>4500)
 ```
 
 Notice that the `|` operator generates a different result. Why?
 ```{r}
+filter(penguins,species=="Chinstrap" | body_mass_g>4500) #| means or
 
 ```
 
@@ -117,7 +121,8 @@ Rules:
 
 In this case, we filter out the penguins with a body mass over 5000g and a bill length over 50mm or a bill depth over 18mm.
 ```{r}
-
+names(penguins)
+filter(penguins,body_mass_g>5000| bill_length_mm>50|bill_depth_mm>18)
 ```
 
 ## Pipes `%>%` 
@@ -125,17 +130,32 @@ In order to start combining `select()`, `filter()`, and other functions efficien
 
 Let's say we are only interested in the body mass of Gentoo penguins. We can use pipes to first select the species and body mass columns then filter that output only for Gentoo penguins. Notice that we only need to call the data one time.
 ```{r}
-
+penguins %>% 
+  select(species,body_mass_g) %>% 
+  filter(species=="Gentoo") #pipe command is shift command m, select goes before filter
 ```
 
 We can sort the output of `filter()` using the `arrange()` function. Here we filter for Gentoo penguins and then sort them by body mass in ascending order.
 ```{r}
-
+penguins %>% 
+  select(species,body_mass_g) %>% 
+  filter(species=="Gentoo") %>% 
+  arrange(body_mass_g) #sorted in ascending oder
 ```
 
 To sort in descending order, wrap the variable name in `desc()`.
 ```{r}
+penguins %>% 
+  select(species,body_mass_g) %>% 
+  filter(species=="Gentoo") %>% 
+  arrange(desc(body_mass_g)) #in descending order instead of ascending
+```
 
+```{r}
+penguins %>% 
+  select(species,body_mass_g) %>% 
+  filter(species=="Gentoo") %>%  #slice pulls out observation in only top and bottom
+  slice_max(body_mass_g, n=1) #top observation only, slice_min is only bottom, n=5 would give top or bottom five
 ```
 
 ## Practice
@@ -143,12 +163,23 @@ Let's use the fish data again to keep things simple.
 
 1. We are interested in the radii length and scalelength of fish with the id `300`. Extract this information from the `fish` data. Please sort the data by radii length.
 ```{r}
+names(fish)
+```
 
+```{r}
+fish %>% 
+  select(fish_id, radii_length_mm, scalelength) %>% 
+  filter(fish_id==300) %>% 
+  arrange(radii_length_mm)
 ```
 
 2. We are interested in the fish from the lakes "AL" and "AR" with a radii length between 2 and 4. Extract this information from the `fish` data. Please sort the data in descending order by radii length.
 ```{r}
-
+fish %>% 
+  select(lakeid,radii_length_mm) %>% 
+  filter(lakeid=="AL" | lakeid=="AR") %>% #you cannot do & because fish isnt from AL and AR at the same time
+  filter(between(radii_length_mm, 2,4)) %>% 
+  arrange(desc(radii_length_mm))
 ```
 
 ## Wrap-up  
