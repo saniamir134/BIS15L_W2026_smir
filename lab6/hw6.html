@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Your Name Here" />
+<meta name="author" content="Sania Mir" />
 
 <meta name="date" content="2026-01-22" />
 
@@ -375,7 +375,7 @@ display: none;
 
 
 <h1 class="title toc-ignore">Homework 6</h1>
-<h4 class="author">Your Name Here</h4>
+<h4 class="author">Sania Mir</h4>
 <h4 class="date">2026-01-22</h4>
 
 </div>
@@ -407,14 +407,98 @@ of Applied Ecology</em>. 2016. A description of the variables is
 included inside the data folder.</p>
 <p><strong>1. Load <code>IvindoData_DryadVersion.csv</code> and store it
 as a new object called <code>gabon</code>.</strong></p>
+<pre class="r"><code>gabon &lt;- read_csv(&quot;data/IvindoData_DryadVersion.csv&quot;)</code></pre>
+<pre><code>## Rows: 24 Columns: 26
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (2): HuntCat, LandUse
+## dbl (24): TransectID, Distance, NumHouseholds, Veg_Rich, Veg_Stems, Veg_lian...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p><strong>2. Use one or more of the summary functions you have learned
 to get an idea of the structure of the data.</strong></p>
+<pre class="r"><code>glimpse(gabon)</code></pre>
+<pre><code>## Rows: 24
+## Columns: 26
+## $ TransectID              &lt;dbl&gt; 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 16, …
+## $ Distance                &lt;dbl&gt; 7.14, 17.31, 18.32, 20.85, 15.95, 17.47, 24.06…
+## $ HuntCat                 &lt;chr&gt; &quot;Moderate&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;N…
+## $ NumHouseholds           &lt;dbl&gt; 54, 54, 29, 29, 29, 29, 29, 54, 25, 73, 46, 56…
+## $ LandUse                 &lt;chr&gt; &quot;Park&quot;, &quot;Park&quot;, &quot;Park&quot;, &quot;Logging&quot;, &quot;Park&quot;, &quot;Pa…
+## $ Veg_Rich                &lt;dbl&gt; 16.67, 15.75, 16.88, 12.44, 17.13, 16.50, 14.7…
+## $ Veg_Stems               &lt;dbl&gt; 31.20, 37.44, 32.33, 29.39, 36.00, 29.22, 31.2…
+## $ Veg_liana               &lt;dbl&gt; 5.78, 13.25, 4.75, 9.78, 13.25, 12.88, 8.38, 8…
+## $ Veg_DBH                 &lt;dbl&gt; 49.57, 34.59, 42.82, 36.62, 41.52, 44.07, 51.2…
+## $ Veg_Canopy              &lt;dbl&gt; 3.78, 3.75, 3.43, 3.75, 3.88, 2.50, 4.00, 4.00…
+## $ Veg_Understory          &lt;dbl&gt; 2.89, 3.88, 3.00, 2.75, 3.25, 3.00, 2.38, 2.71…
+## $ RA_Apes                 &lt;dbl&gt; 1.87, 0.00, 4.49, 12.93, 0.00, 2.48, 3.78, 6.1…
+## $ RA_Birds                &lt;dbl&gt; 52.66, 52.17, 37.44, 59.29, 52.62, 38.64, 42.6…
+## $ RA_Elephant             &lt;dbl&gt; 0.00, 0.86, 1.33, 0.56, 1.00, 0.00, 1.11, 0.43…
+## $ RA_Monkeys              &lt;dbl&gt; 38.59, 28.53, 41.82, 19.85, 41.34, 43.29, 46.2…
+## $ RA_Rodent               &lt;dbl&gt; 4.22, 6.04, 1.06, 3.66, 2.52, 1.83, 3.10, 1.26…
+## $ RA_Ungulate             &lt;dbl&gt; 2.66, 12.41, 13.86, 3.71, 2.53, 13.75, 3.10, 8…
+## $ Rich_AllSpecies         &lt;dbl&gt; 22, 20, 22, 19, 20, 22, 23, 19, 19, 19, 21, 22…
+## $ Evenness_AllSpecies     &lt;dbl&gt; 0.793, 0.773, 0.740, 0.681, 0.811, 0.786, 0.81…
+## $ Diversity_AllSpecies    &lt;dbl&gt; 2.452, 2.314, 2.288, 2.006, 2.431, 2.429, 2.56…
+## $ Rich_BirdSpecies        &lt;dbl&gt; 11, 10, 11, 8, 8, 10, 11, 11, 11, 9, 11, 11, 1…
+## $ Evenness_BirdSpecies    &lt;dbl&gt; 0.732, 0.704, 0.688, 0.559, 0.799, 0.771, 0.80…
+## $ Diversity_BirdSpecies   &lt;dbl&gt; 1.756, 1.620, 1.649, 1.162, 1.660, 1.775, 1.92…
+## $ Rich_MammalSpecies      &lt;dbl&gt; 11, 10, 11, 11, 12, 12, 12, 8, 8, 10, 10, 11, …
+## $ Evenness_MammalSpecies  &lt;dbl&gt; 0.736, 0.705, 0.650, 0.619, 0.736, 0.694, 0.77…
+## $ Diversity_MammalSpecies &lt;dbl&gt; 1.764, 1.624, 1.558, 1.484, 1.829, 1.725, 1.92…</code></pre>
 <p><strong>3. Clean the data as necessary following the conventions from
 lab 6.</strong></p>
+<pre class="r"><code>gabon &lt;- gabon %&gt;% 
+  clean_names() </code></pre>
 <p><strong>4. Use <code>mutate()</code> Change the variables
 <code>HuntCat</code>, <code>LandUse</code>, and <code>TransectID</code>
 to factors. Be sure to store the output as a new dataframe and use it
 for the remaining questions.</strong></p>
+<pre class="r"><code>gabon %&gt;% 
+  mutate(across(c(hunt_cat,land_use,transect_id), as.factor))</code></pre>
+<pre><code>## # A tibble: 24 × 26
+##    transect_id distance hunt_cat num_households land_use veg_rich veg_stems
+##    &lt;fct&gt;          &lt;dbl&gt; &lt;fct&gt;             &lt;dbl&gt; &lt;fct&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+##  1 1               7.14 Moderate             54 Park         16.7      31.2
+##  2 2              17.3  None                 54 Park         15.8      37.4
+##  3 2              18.3  None                 29 Park         16.9      32.3
+##  4 3              20.8  None                 29 Logging      12.4      29.4
+##  5 4              16.0  None                 29 Park         17.1      36  
+##  6 5              17.5  None                 29 Park         16.5      29.2
+##  7 6              24.1  None                 29 Park         14.8      31.2
+##  8 7              19.8  None                 54 Logging      13.2      32.6
+##  9 8               5.78 High                 25 Neither      12.6      23.7
+## 10 9               5.13 High                 73 Logging      16        27.1
+## # ℹ 14 more rows
+## # ℹ 19 more variables: veg_liana &lt;dbl&gt;, veg_dbh &lt;dbl&gt;, veg_canopy &lt;dbl&gt;,
+## #   veg_understory &lt;dbl&gt;, ra_apes &lt;dbl&gt;, ra_birds &lt;dbl&gt;, ra_elephant &lt;dbl&gt;,
+## #   ra_monkeys &lt;dbl&gt;, ra_rodent &lt;dbl&gt;, ra_ungulate &lt;dbl&gt;,
+## #   rich_all_species &lt;dbl&gt;, evenness_all_species &lt;dbl&gt;,
+## #   diversity_all_species &lt;dbl&gt;, rich_bird_species &lt;dbl&gt;,
+## #   evenness_bird_species &lt;dbl&gt;, diversity_bird_species &lt;dbl&gt;, …</code></pre>
+<pre class="r"><code>gabon %&gt;% 
+  mutate(hunt_cat = as.factor(hunt_cat))</code></pre>
+<pre><code>## # A tibble: 24 × 26
+##    transect_id distance hunt_cat num_households land_use veg_rich veg_stems
+##          &lt;dbl&gt;    &lt;dbl&gt; &lt;fct&gt;             &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+##  1           1     7.14 Moderate             54 Park         16.7      31.2
+##  2           2    17.3  None                 54 Park         15.8      37.4
+##  3           2    18.3  None                 29 Park         16.9      32.3
+##  4           3    20.8  None                 29 Logging      12.4      29.4
+##  5           4    16.0  None                 29 Park         17.1      36  
+##  6           5    17.5  None                 29 Park         16.5      29.2
+##  7           6    24.1  None                 29 Park         14.8      31.2
+##  8           7    19.8  None                 54 Logging      13.2      32.6
+##  9           8     5.78 High                 25 Neither      12.6      23.7
+## 10           9     5.13 High                 73 Logging      16        27.1
+## # ℹ 14 more rows
+## # ℹ 19 more variables: veg_liana &lt;dbl&gt;, veg_dbh &lt;dbl&gt;, veg_canopy &lt;dbl&gt;,
+## #   veg_understory &lt;dbl&gt;, ra_apes &lt;dbl&gt;, ra_birds &lt;dbl&gt;, ra_elephant &lt;dbl&gt;,
+## #   ra_monkeys &lt;dbl&gt;, ra_rodent &lt;dbl&gt;, ra_ungulate &lt;dbl&gt;,
+## #   rich_all_species &lt;dbl&gt;, evenness_all_species &lt;dbl&gt;,
+## #   diversity_all_species &lt;dbl&gt;, rich_bird_species &lt;dbl&gt;,
+## #   evenness_bird_species &lt;dbl&gt;, diversity_bird_species &lt;dbl&gt;, …</code></pre>
 <p><strong>5. Make a plot that shows the number of transects for each
 land use type.</strong></p>
 <p><strong>6. How does vegetation richness compare among land use
