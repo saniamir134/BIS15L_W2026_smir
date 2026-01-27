@@ -24,6 +24,11 @@ library("janitor")
 ## Data
 For this lab, we will use the built-in data on mammal sleep patterns, `msleep`. From: _V. M. Savage and G. B. West. A quantitative, theoretical framework for understanding mammalian sleep. Proceedings of the National Academy of Sciences, 104 (3):1051-1056, 2007_.
 
+```{r}
+msleep
+```
+
+
 ## Summary statistics
 When first exploring data, it is often a good idea to produce some basic summary statistics. This can help you identify potential problems with the data (e.g., outliers, missing values, skew) as well as get a general sense of the distribution of values for a given variable. So far, you have learned to calculate summary statistics using _base R_ functions such as `mean()`, `sd()`, `min()`, and `max()`.  
 
@@ -37,15 +42,21 @@ large
 ```
 
 ```{r}
-
+small <- msleep
 ```
 
 ```{r}
-
+small <- msleep %>% 
+  filter(bodywt < 10) %>% 
+  arrange(desc(bodywt))
+small
 ```
 
 ```{r}
-
+mean(large$bodywt)
+```
+```{r}
+mean(small$bodywt)
 ```
 
 ## `summarize()`
@@ -53,68 +64,93 @@ Fortunately, dplyr has some functions that make producing summary statistics eas
 
 Large mammals
 ```{r}
-
+msleep %>% 
+  filter(bodywt>150) %>% 
+  summarize(mean_bodywt_lg=mean(bodywt))
 ```
 
 Small mammals
 ```{r}
-
+msleep %>% 
+  filter(bodywt<10) %>% 
+  summarize(mean_bodywt_sm=mean(bodywt)) #summarize used to get quick stats summary
 ```
 
 You can also combine functions to make summaries for multiple variables.
 ```{r}
-
+msleep %>% 
+  filter(bodywt>150) %>% 
+  summarize(mean_bodywt_lg=mean(bodywt), min_bodywt_lg=min(bodywt), 
+max_bodywt_lg=max(bodywt), sd_bodywt_lg=sd(bodywt), total=n())
 ```
 
 Maybe you want to summarize all of the numeric variables in the data frame. You can use the `where()` function to select only the numeric variables.
 ```{r}
-
+msleep %>% 
+  select(where(is.numeric)) %>% 
+  summarise_all(mean) #but gives NAs if. you leave it here
 ```
 
 Don't forget to remove NA's.
 ```{r}
-
+msleep %>% 
+  select(where(is.numeric)) %>% 
+  summarise_all(mean, na.rm=T) 
 ```
 
 This is a little more efficient.
 ```{r}
-
+msleep %>% 
+  summarize(across(where(is.numeric),
+                   ~mean(.x, na.rm=T))) #.x means all observations, all are not NA
 ```
 
 ## Practice
 1. What is the mean, min, and max `bodywt` for the taxonomic order Primates? Provide the total number of observations.
 ```{r}
-
+msleep %>% 
+  filter(order=="Primates") %>% 
+  summarize(mean_bodywt_primate=mean(bodywt), 
+            min_bodywt_primate=min(bodywt),
+            max_bodywt_primate=max(bodywt), 
+            total=n())
 ```
 
 `n_distinct()` is a handy way of cleanly presenting the number of distinct observations. Notice that there are 9 genera with over 100 in body weight.
-```{r}
-
-```
 
 Here we show the number of distinct genera over 100 in body weight.
 ```{r}
-
+msleep %>% 
+  filter(bodywt>100) %>% 
+  summarize(n_genera=n_distinct(genus))
+```
+```{r}
+msleep %>% 
+  filter(bodywt>100) %>% 
+  n_distinct() #this give you 11 bc in table there are repeats of genus
 ```
 
 Not to be confused with n(), which counts the total number of observations.
 ```{r}
-
+msleep %>% 
+  filter(bodywt>100) %>% 
+  summarize(total=n()) #also shows repeats
 ```
 
-```{r}
-
-```
 
 `pull()` is another useful verb that extracts a single column from a data frame as a vector.
 ```{r}
-
+msleep %>% 
+  filter(bodywt>100) %>% 
+  distinct() %>% #if you add genus inside distinct then it will not give repeats of genus
+  pull(genus)
 ```
 
 ## Practice
 1. How many genera are represented in the msleep data frame?
 ```{r}
-
+msleep %>% 
+  summarize(n_genera=n_distinct(genus))
 ```
 
 ## Counts
@@ -122,32 +158,42 @@ Although `summarize()` is helpful, oftentimes we are only interested in counts. 
 
 For example, if we wanted to count the number of observations for each `vore` category in the `msleep` data frame we could do the following:
 ```{r}
-
+msleep %>% 
+  count(vore, sort=T) #sort in descending order
 ```
-
+vore = x, n = y axis; you can make a plot
 ```{r}
-
+msleep %>% 
+  count(vore) %>% 
+  ggplot(aes(x=vore, y=n))+
+  geom_col()
 ```
 
 You can even combine multiple variables to get counts. For example, if we wanted to count the number of observations for each `vore` category within each `order` category we could do the following:
 ```{r}
-
+msleep %>% 
+  count(vore, order)
 ```
 
 The tabyl() function from the janitor package is also very useful for producing counts and percentages.  
 ```{r}
-
+msleep %>% 
+  tabyl(vore)
 ```
 
 ## Practice
 1. In the taxonomic order Carnivora, count the number of observations for each conservation status.
 ```{r}
-
+msleep %>% 
+  filter(order=="Carnivora") %>% 
+  count(conservation)
 ```
 
 2. Among herbivores, which order is most represented? Return the top 5 orders with counts, sorted in descending order.
 ```{r}
-
+msleep %>% 
+  filter(vore=="herbi") %>% 
+  count(vore,order, sort=T)
 ```
 
 -->[Home](https://jmledford3115.github.io/datascibiol/)  

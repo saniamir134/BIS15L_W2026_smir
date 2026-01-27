@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Your Name Here" />
+<meta name="author" content="Sania Mir" />
 
 <meta name="date" content="2026-01-27" />
 
@@ -375,7 +375,7 @@ display: none;
 
 
 <h1 class="title toc-ignore">Homework 7</h1>
-<h4 class="author">Your Name Here</h4>
+<h4 class="author">Sania Mir</h4>
 <h4 class="date">2026-01-27</h4>
 
 </div>
@@ -406,73 +406,146 @@ Repository</a>.</p>
 <p><strong>1. Before starting data analysis, read the abstract of the
 paper to get an idea of the questions being asked. In 2-3 sentences,
 describe what the study is testing and the variables
-involved.</strong><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
+involved.</strong></p>
+<pre class="r"><code>#comparing tusk size in elephants before andivory harvesting which shows that tusk size of survivors and elephants born after ivory harvesting declined. tusk length declined by ~21% in male and ~27% in female elephants during population recovery, tusk length declined by 22% in males and 37% in females among survivors. Tusk circumference at lip declined by 5% in males but not in females born during population recovery,  tusk circumference reduced by 8% in male and by 11% in female survivors. In a single subpopulation, mean tusk length at mean basal tusk circumference declined by 12.4% in males and 21% in females. </code></pre>
 <p><strong>2. Load <code>elephants.csv</code> and store it as a new
-object called <code>elephants</code>.</strong><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
+object called <code>elephants</code>.</strong></p>
+<pre class="r"><code>elephants &lt;- read_csv(&quot;data/elephants.csv&quot;)</code></pre>
+<pre><code>## Rows: 777 Columns: 7
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (3): Years of sample collection, Elephant ID, Sex
+## dbl (4): Estimated Age (years), shoulder Height in  cm, Tusk Length in cm, T...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>names(elephants)</code></pre>
+<pre><code>## [1] &quot;Years of sample collection&quot; &quot;Elephant ID&quot;               
+## [3] &quot;Sex&quot;                        &quot;Estimated Age (years)&quot;     
+## [5] &quot;shoulder Height in  cm&quot;     &quot;Tusk Length in cm&quot;         
+## [7] &quot;Tusk Circumference   in cm&quot;</code></pre>
 <p><strong>3. Clean the data by converting variable names to lowercase
-with no spaces or special characters.</strong><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
+with no spaces or special characters.</strong></p>
+<pre class="r"><code>elephants &lt;- elephants %&gt;% 
+  clean_names() </code></pre>
 <p><strong>4. Use one or more of the summary functions you have learned
-to get an idea of the structure of the data.</strong><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
+to get an idea of the structure of the data.</strong></p>
+<pre class="r"><code>glimpse(elephants)</code></pre>
+<pre><code>## Rows: 777
+## Columns: 7
+## $ years_of_sample_collection &lt;chr&gt; &quot;1966-68&quot;, &quot;1966-68&quot;, &quot;1966-68&quot;, &quot;1966-68&quot;,…
+## $ elephant_id                &lt;chr&gt; &quot;12&quot;, &quot;34&quot;, &quot;162&quot;, &quot;292&quot;, &quot;11&quot;, &quot;152&quot;, &quot;264…
+## $ sex                        &lt;chr&gt; &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;…
+## $ estimated_age_years        &lt;dbl&gt; 0.080, 0.080, 0.083, 0.083, 0.250, 0.250, 0…
+## $ shoulder_height_in_cm      &lt;dbl&gt; 102, 89, 89, 92, 133, 100, 93, 108, 108, 12…
+## $ tusk_length_in_cm          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+## $ tusk_circumference_in_cm   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</code></pre>
 <p><strong>5. Use <code>mutate()</code> Change the variables
 <code>years_of_sample_collection</code>, <code>elephant_id</code>, and
 <code>sex</code> to factors. Be sure to store the output as a new
-dataframe and use it for the remaining questions.</strong><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
+dataframe and use it for the remaining questions.</strong></p>
+<pre class="r"><code>elephants %&gt;% 
+  mutate(across(c(years_of_sample_collection,elephant_id,sex), as.factor))</code></pre>
+<pre><code>## # A tibble: 777 × 7
+##    years_of_sample_collection elephant_id sex   estimated_age_years
+##    &lt;fct&gt;                      &lt;fct&gt;       &lt;fct&gt;               &lt;dbl&gt;
+##  1 1966-68                    12          f                   0.08 
+##  2 1966-68                    34          f                   0.08 
+##  3 1966-68                    162         f                   0.083
+##  4 1966-68                    292         f                   0.083
+##  5 1966-68                    11          f                   0.25 
+##  6 1966-68                    152         f                   0.25 
+##  7 1966-68                    264         f                   0.25 
+##  8 1966-68                    263         f                   0.5  
+##  9 1966-68                    266         f                   0.5  
+## 10 1966-68                    217         f                   1    
+## # ℹ 767 more rows
+## # ℹ 3 more variables: shoulder_height_in_cm &lt;dbl&gt;, tusk_length_in_cm &lt;dbl&gt;,
+## #   tusk_circumference_in_cm &lt;dbl&gt;</code></pre>
 <p><strong>6. From which years were data collected? Show the sample
-periods below.</strong><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
+periods below.</strong></p>
+<pre class="r"><code>names(elephants)</code></pre>
+<pre><code>## [1] &quot;years_of_sample_collection&quot; &quot;elephant_id&quot;               
+## [3] &quot;sex&quot;                        &quot;estimated_age_years&quot;       
+## [5] &quot;shoulder_height_in_cm&quot;      &quot;tusk_length_in_cm&quot;         
+## [7] &quot;tusk_circumference_in_cm&quot;</code></pre>
+<pre class="r"><code>elephants %&gt;% 
+  count(years_of_sample_collection)</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   years_of_sample_collection     n
+##   &lt;chr&gt;                      &lt;int&gt;
+## 1 1966-68                      605
+## 2 2005-13                      172</code></pre>
 <p><strong>7. How many males and females were sampled in this
-study?</strong><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
+study?</strong></p>
+<pre class="r"><code>elephants %&gt;% 
+  count(sex)</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   sex       n
+##   &lt;chr&gt; &lt;int&gt;
+## 1 f       416
+## 2 m       361</code></pre>
 <p><strong>8. What is the mean, median, and standard deviation for age
 of males and females included in the study? Separate the results by year
 of sample collection. Does the sampling look even between years and
-sexes?</strong><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
+sexes?</strong></p>
+<pre class="r"><code>elephants</code></pre>
+<pre><code>## # A tibble: 777 × 7
+##    years_of_sample_collection elephant_id sex   estimated_age_years
+##    &lt;chr&gt;                      &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt;
+##  1 1966-68                    12          f                   0.08 
+##  2 1966-68                    34          f                   0.08 
+##  3 1966-68                    162         f                   0.083
+##  4 1966-68                    292         f                   0.083
+##  5 1966-68                    11          f                   0.25 
+##  6 1966-68                    152         f                   0.25 
+##  7 1966-68                    264         f                   0.25 
+##  8 1966-68                    263         f                   0.5  
+##  9 1966-68                    266         f                   0.5  
+## 10 1966-68                    217         f                   1    
+## # ℹ 767 more rows
+## # ℹ 3 more variables: shoulder_height_in_cm &lt;dbl&gt;, tusk_length_in_cm &lt;dbl&gt;,
+## #   tusk_circumference_in_cm &lt;dbl&gt;</code></pre>
+<pre class="r"><code>elephants %&gt;% 
+  filter(years_of_sample_collection==&quot;1966-68&quot;) %&gt;% 
+  filter(sex==&quot;f&quot;) %&gt;% 
+  summarize(mean_age_f_19=mean(estimated_age_years, na.rm=T),
+            median_age_f_19=median(estimated_age_years, na.rm=T),
+            sd_age_f_19=sd(estimated_age_years, na.rm=T))</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   mean_age_f_19 median_age_f_19 sd_age_f_19
+##           &lt;dbl&gt;           &lt;dbl&gt;       &lt;dbl&gt;
+## 1          17.6              15        13.6</code></pre>
+<pre class="r"><code>elephants %&gt;% 
+  filter(years_of_sample_collection==&quot;2005-13&quot;) %&gt;% 
+  filter(sex==&quot;f&quot;) %&gt;% 
+  summarize(mean_age_f_20=mean(estimated_age_years, na.rm=T),
+            median_age_f_20=median(estimated_age_years, na.rm=T),
+            sd_age_f_20=sd(estimated_age_years, na.rm=T))</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   mean_age_f_20 median_age_f_20 sd_age_f_20
+##           &lt;dbl&gt;           &lt;dbl&gt;       &lt;dbl&gt;
+## 1          17.9            17.5        11.0</code></pre>
+<pre class="r"><code>elephants %&gt;% 
+  filter(years_of_sample_collection==&quot;2005-13&quot;) %&gt;% 
+  filter(sex==&quot;m&quot;) %&gt;% 
+  summarize(mean_age_m_20=mean(estimated_age_years, na.rm=T),
+            median_age_m_20=median(estimated_age_years, na.rm=T),
+            sd_age_m_20=sd(estimated_age_years, na.rm=T))</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   mean_age_m_20 median_age_m_20 sd_age_m_20
+##           &lt;dbl&gt;           &lt;dbl&gt;       &lt;dbl&gt;
+## 1          16.7               9        13.9</code></pre>
+<pre class="r"><code>elephants %&gt;% 
+  filter(years_of_sample_collection==&quot;1966-68&quot;) %&gt;% 
+  filter(sex==&quot;m&quot;) %&gt;% 
+  summarize(mean_age_m_19=mean(estimated_age_years, na.rm=T),
+            median_age_m_19=median(estimated_age_years, na.rm=T),
+            sd_age_m_19=sd(estimated_age_years, na.rm=T))</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   mean_age_m_19 median_age_m_19 sd_age_m_19
+##           &lt;dbl&gt;           &lt;dbl&gt;       &lt;dbl&gt;
+## 1          10.8               8        9.19</code></pre>
 <p><strong>9. Is age (independent variable) a positive predictor of tusk
 length (dependent variable)? Create a plot that shows the relationship
 between these variables and add a linear model fit line.</strong><br />

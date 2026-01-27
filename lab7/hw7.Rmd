@@ -1,6 +1,6 @@
 ---
 title: "Homework 7"
-author: "Your Name Here"
+author: "Sania Mir"
 date: "`r Sys.Date()`"
 output:
   html_document: 
@@ -22,61 +22,102 @@ For this assignment, we will use data from a study on elephants and the effects 
 Reference: [Chiyo, Patrick I., Vincent Obanda, and David K. Korir. “Illegal tusk harvest and the decline of tusk size in the African elephant.” Ecology and Evolution 5, 22: 5216–5229 (2015)](https://doi.org/10.1002/ece3.1769). Data deposited at [Dryad Digital Repository](https://doi.org/10.5061/dryad.h6t7j).  
 
 **1. Before starting data analysis, read the abstract of the paper to get an idea of the questions being asked. In 2-3 sentences, describe what the study is testing and the variables involved.**  
-\
-\
-\
-\
-\
+
+```{r}
+#comparing tusk size in elephants before andivory harvesting which shows that tusk size of survivors and elephants born after ivory harvesting declined. tusk length declined by ~21% in male and ~27% in female elephants during population recovery, tusk length declined by 22% in males and 37% in females among survivors. Tusk circumference at lip declined by 5% in males but not in females born during population recovery,  tusk circumference reduced by 8% in male and by 11% in female survivors. In a single subpopulation, mean tusk length at mean basal tusk circumference declined by 12.4% in males and 21% in females. 
+```
+
 
 **2. Load `elephants.csv` and store it as a new object called `elephants`.**  
-\
-\
-\
-\
-\
+```{r}
+elephants <- read_csv("data/elephants.csv")
+```
+```{r}
+names(elephants)
+```
+
 
 **3. Clean the data by converting variable names to lowercase with no spaces or special characters.**  
-\
-\
-\
-\
-\
+
+```{r}
+elephants <- elephants %>% 
+  clean_names() 
+```
+
 
 **4. Use one or more of the summary functions you have learned to get an idea of the structure of the data.**   
-\
-\
-\
-\
-\
+
+```{r}
+glimpse(elephants)
+```
+
 
 **5. Use `mutate()` Change the variables `years_of_sample_collection`, `elephant_id`, and `sex` to factors. Be sure to store the output as a new dataframe and use it for the remaining questions.**  
-\
-\
-\
-\
-\
+```{r}
+elephants %>% 
+  mutate(across(c(years_of_sample_collection,elephant_id,sex), as.factor))
+```
+
 
 **6. From which years were data collected? Show the sample periods below.**  
-\
-\
-\
-\
-\
+```{r}
+names(elephants)
+```
+
+```{r}
+elephants %>% 
+  count(years_of_sample_collection)
+
+```
+
 
 **7. How many males and females were sampled in this study?**  
-\
-\
-\
-\
-\
+
+
+```{r}
+elephants %>% 
+  count(sex)
+```
 
 **8. What is the mean, median, and standard deviation for age of males and females included in the study? Separate the results by year of sample collection. Does the sampling look even between years and sexes?**  
-\
-\
-\
-\
-\
+```{r}
+elephants
+```
 
+
+```{r}
+elephants %>% 
+  filter(years_of_sample_collection=="1966-68") %>% 
+  filter(sex=="f") %>% 
+  summarize(mean_age_f_19=mean(estimated_age_years, na.rm=T),
+            median_age_f_19=median(estimated_age_years, na.rm=T),
+            sd_age_f_19=sd(estimated_age_years, na.rm=T))
+```
+```{r}
+elephants %>% 
+  filter(years_of_sample_collection=="2005-13") %>% 
+  filter(sex=="f") %>% 
+  summarize(mean_age_f_20=mean(estimated_age_years, na.rm=T),
+            median_age_f_20=median(estimated_age_years, na.rm=T),
+            sd_age_f_20=sd(estimated_age_years, na.rm=T))
+```
+```{r}
+elephants %>% 
+  filter(years_of_sample_collection=="2005-13") %>% 
+  filter(sex=="m") %>% 
+  summarize(mean_age_m_20=mean(estimated_age_years, na.rm=T),
+            median_age_m_20=median(estimated_age_years, na.rm=T),
+            sd_age_m_20=sd(estimated_age_years, na.rm=T))
+```
+
+```{r}
+elephants %>% 
+  filter(years_of_sample_collection=="1966-68") %>% 
+  filter(sex=="m") %>% 
+  summarize(mean_age_m_19=mean(estimated_age_years, na.rm=T),
+            median_age_m_19=median(estimated_age_years, na.rm=T),
+            sd_age_m_19=sd(estimated_age_years, na.rm=T))
+```
 **9. Is age (independent variable) a positive predictor of tusk length (dependent variable)? Create a plot that shows the relationship between these variables and add a linear model fit line.**  
 \
 \
