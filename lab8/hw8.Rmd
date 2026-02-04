@@ -103,16 +103,48 @@ fisheries_clean %>%
   select(country, period, catch) %>% 
   summarize(max_catch_country_2023=max(catch, na.rm=T), country=country, period= period) %>% 
   slice_max(period, n=1)
+#all those countries have the same highest score
 ```
 
 9. How has fishing of this species changed over the last decade (2013-2023)? Create a  plot showing total catch by year for this species.
 ```{r}
+fisheries_clean
+```
+```{r}
+last_decade <- fisheries_clean %>% 
+  filter(period >= 2013 & period <= 2023) 
+```
+
+
+```{r}
+ggplot(last_decade, 
+       aes(x = period, y = catch)) +
+  geom_boxplot() +
+  labs(title = "fishing of this species changed over the last decade (2013-2023)", x = "yrs", y = "catch num")
+```
+9. How has fishing of this species changed over the last decade (2013-2023)? Create a  plot showing total catch by year for this species.
+
+
+```{r}
+last_decade <- fisheries_clean %>% 
+  filter(period %in% c("2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"))
 
 ```
 
-10. Perform one exploratory analysis of your choice. Make sure to clearly state the question you are asking before writing any code.
-```{r}
 
+```{r}
+ggplot(last_decade, aes(x = period, y = catch)) +
+  geom_col() +
+  labs(title = "fishing of this species changed over the last decade (2013-2023)", x = "yr", y = "catch num")
+```
+
+10. Perform one exploratory analysis of your choice. Make sure to clearly state the question you are asking before writing any code.
+How does total catch vary across continents?
+```{r}
+ggplot(fisheries_clean,
+       aes(x = continent, y = catch)) +
+  geom_boxplot() +
+  labs(title = "total catch vary across continents",x = "continent",y = "catch")
 ```
 
 ## Knit and Upload

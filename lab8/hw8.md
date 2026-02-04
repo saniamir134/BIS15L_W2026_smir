@@ -309,11 +309,89 @@ fisheries_clean %>%
 ## # ℹ 17,655 more rows
 ```
 
+``` r
+#all those countries have the same highest score
+```
+
+9. How has fishing of this species changed over the last decade (2013-2023)? Create a  plot showing total catch by year for this species.
+
+``` r
+fisheries_clean
+```
+
+```
+## # A tibble: 1,055,015 × 9
+##    period continent geo_region    country     scientific_name common_name       
+##     <dbl> <chr>     <chr>         <chr>       <chr>           <chr>             
+##  1   1950 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+##  2   1951 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+##  3   1952 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+##  4   1953 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+##  5   1954 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+##  6   1955 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+##  7   1956 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+##  8   1957 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+##  9   1958 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+## 10   1959 Asia      Southern Asia Afghanistan Osteichthyes    Freshwater fishes…
+## # ℹ 1,055,005 more rows
+## # ℹ 3 more variables: taxonomic_code <chr>, catch <dbl>, status <chr>
+```
+
+``` r
+last_decade <- fisheries_clean %>% 
+  filter(period >= 2013 & period <= 2023) 
+```
+
+
+
+``` r
+ggplot(last_decade, 
+       aes(x = period, y = catch)) +
+  geom_boxplot() +
+  labs(title = "fishing of this species changed over the last decade (2013-2023)", x = "yrs", y = "catch num")
+```
+
+```
+## Warning: Orientation is not uniquely specified when both the x and y aesthetics are
+## continuous. Picking default orientation 'x'.
+```
+
+```
+## Warning: Continuous x aesthetic
+## ℹ did you forget `aes(group = ...)`?
+```
+
+![](hw8_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 9. How has fishing of this species changed over the last decade (2013-2023)? Create a  plot showing total catch by year for this species.
 
 
-10. Perform one exploratory analysis of your choice. Make sure to clearly state the question you are asking before writing any code.
 
+``` r
+last_decade <- fisheries_clean %>% 
+  filter(period %in% c("2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"))
+```
+
+
+
+``` r
+ggplot(last_decade, aes(x = period, y = catch)) +
+  geom_col() +
+  labs(title = "fishing of this species changed over the last decade (2013-2023)", x = "yr", y = "catch num")
+```
+
+![](hw8_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+
+10. Perform one exploratory analysis of your choice. Make sure to clearly state the question you are asking before writing any code.
+How does total catch vary across continents?
+
+``` r
+ggplot(fisheries_clean,
+       aes(x = continent, y = catch)) +
+  geom_boxplot() +
+  labs(title = "total catch vary across continents",x = "continent",y = "catch")
+```
+
+![](hw8_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
