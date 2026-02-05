@@ -58,35 +58,70 @@ sydneybeaches_long %>%
 
 5. Pivot the data back so that the dates are data and not column names.
 ```{r}
+sydneybeaches_wide <- sydneybeaches_long %>% 
+  pivot_wider(names_from = date,
+              values_from = enterococci_cfu_100ml)
+
+sydneybeaches_long_again <- sydneybeaches_wide %>% 
+  pivot_longer(-site,
+               names_to = "date",
+               values_to = "enterococci_cfu_100ml")
+
 
 ```
 
 6. We haven't dealt much with dates yet, but separate the date into columns day, month, and year. Do this on the `sydneybeaches_long` data.
 ```{r}
+sydneybeaches_dates <- sydneybeaches_long %>% 
+  separate(date, into = c("day", "month", "year"), sep = "/")
+
 
 ```
 
 7. What is the average `enterococci_cfu_100ml` by year for each beach. Think about which data you will use- long or wide.
 ```{r}
+avg_enterococci <- sydneybeaches_dates %>% 
+  group_by(site, year) %>% 
+  summarize(mean_enterococci = mean(enterococci_cfu_100ml, na.rm = T))
+
+
 
 ```
 
+
 8. Make the output from question 7 easier to read by pivoting it to wide format.
 ```{r}
+avg_enterococci_wide <- avg_enterococci %>% 
+  pivot_wider(names_from = year,
+              values_from = mean_enterococci)
+
 
 ```
 
 9. What was the most polluted beach in 2013?
 ```{r}
+most_polluted_2013 <- avg_enterococci %>% 
+  filter(year == "2013") %>% 
+  arrange(desc(mean_enterococci))
+
+most_polluted_2013
+
+  
+#little bay beach was the most polluted 
 
 ```
 
-```{r}
 
-```
 
 10. Explore the data! Do one analysis of your choice that includes a minimum of three lines of code.  
+
 ```{r}
+#how many samples were taken at each site using a bar chart
+
+ggplot(data = sydneybeaches_long, 
+       mapping = aes(x = site))+
+  geom_bar(mapping = aes(fill = site))+
+  labs(title="samples taken at each site")
 
 ```
 
