@@ -2,6 +2,7 @@
 title: "Homework 10"
 author: "Key"
 date: "`r Sys.Date()`"
+name: "sania Mir"
 output:
   html_document:
     theme: spacelab
