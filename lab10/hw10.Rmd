@@ -35,35 +35,94 @@ sharks <-
 ## Questions
 1. Are there any "hotspots" for shark incidents in California? Show the top five counties with the most incidents.
 ```{r}
-
+sharks %>% 
+  group_by(county) %>% 
+  summarize(total_incidents = n()) %>% 
+  slice_max(total_incidents, n = 5)
 ```
 
 2.  Make a plot that shows the total number of incidents per county.
 ```{r}
-
+sharks %>% 
+  group_by(county) %>% 
+  summarize(total_incidents = n()) %>% 
+  ggplot(aes(x = county, y = total_incidents)) +
+  geom_col() +
+  coord_flip()
 ```
 
 3. Are there months of the year when incidents are more likely to occur? Make a plot that shows the total number of incidents by month. Which month has the highest number of incidents?  
 ```{r}
+sharks %>% 
+  group_by(month) %>% 
+  summarize(total_incidents = n()) %>% 
+  ggplot(aes(x = month, y = total_incidents)) +
+  geom_col()
 
 ```
 
 ```{r}
-
+sharks %>% 
+  group_by(month) %>% 
+  summarize(total_incidents = n()) %>% 
+  slice_max(total_incidents, n = 1)
+#the month 10 is highest 
 ```
 
 4. Is there a time of day when most attacks occur? Make a plot that shows the total number of incidents by time of day. Which time of day has the highest number of incidents?  
 ```{r}
+sharks %>% 
+  group_by(time) %>% 
+  summarize(total_incidents = n()) %>% 
+  ggplot(aes(x = time, y = total_incidents)) +
+  geom_col()+
+  coord_flip()
 
+```
+```{r}
+sharks %>% 
+  group_by(time) %>% 
+  summarize(total_incidents = n()) %>% 
+  slice_max(total_incidents, n = 1)
+#NA time has the highest
 ```
 
 5. How do the number and types of injuries compare by county? Make a table that shows the number of injury types by county. Which county has the highest number incidents? (hint: your table should be in wide format)
 ```{r}
+injury_count_by_county <- sharks %>% 
+  count(county, injury) %>%   
+  pivot_wider(names_from=injury,  
+              values_from=n, 
+              values_fill=0)
+
+injury_count_by_county
+
+#san diego is highesst number of incidents
+```
+```{r}
+injury_count_by_county <- sharks %>%
+  count(county, injury) %>%  # counts each injury type
+  pivot_wider(
+    names_from = injury,
+    values_from = n,
+    values_fill = list(n = 0)  # replace missing counts with 0
+  ) %>%
+  mutate(total_incidents = Fatal + Non-Fatal + Unknown)  # sum for total
 
 ```
 
 6. Use the table from #5 to make a plot that shows the total number of incidents by county.
 ```{r}
+
+injury_count_by_county %>%
+  ggplot(aes(x = reorder(county, total_incidents), y = total_incidents)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Total Shark Incidents by County",
+    x = "County",
+    y = "Total Incidents"
+  )
 
 ```
 
