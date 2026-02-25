@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2026-02-18" />
+<meta name="date" content="2026-02-25" />
 
 <title>Lab 13.2</title>
 
@@ -1503,7 +1503,7 @@ border-radius: 0px;
 
 
 <h1 class="title toc-ignore">Lab 13.2</h1>
-<h4 class="date">2026-02-18</h4>
+<h4 class="date">2026-02-25</h4>
 
 </div>
 
@@ -1529,25 +1529,78 @@ types of joins. This section was based on the excellent example provided
 by <a href="https://hollyemblem.medium.com/joining-data-with-dplyr-in-r-874698eb8898">Holly
 Emblem</a>.</p>
 <p>Let’s assume we have a database of customers and their purchases.</p>
+<pre class="r"><code>table_A &lt;- read_csv(&quot;data/table_A.csv&quot;)
+table_B &lt;- read_csv(&quot;data/table_B.csv&quot;)</code></pre>
+<pre class="r"><code>table_A</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   customer_ID n_orders total_value_orders ave_value_orders last_order_date
+##         &lt;dbl&gt;    &lt;dbl&gt;              &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;          
+## 1           1        5                500              100 12/7/20        
+## 2           2       10                240               24 1/2/18         
+## 3           3        4                 40               10 3/6/20</code></pre>
+<pre class="r"><code>table_B</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   customer_ID   age gender favorite
+##         &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   
+## 1           1    50 M      t_shirts
+## 2           2    44 F      leggings
+## 3           4    30 F      jumpers</code></pre>
 <p>The general syntax for joins is…</p>
 <pre class="r"><code>#join_type(firstTable, secondTable, by=columnTojoinOn)</code></pre>
 <p><code>inner_join</code><br />
 Where did customers 3 and 4 go? Since they are not on both tables, they
 were dropped. So, <code>inner_join</code> only keeps the rows that have
 matching values in both tables; it is very strict about matching.</p>
+<pre class="r"><code>inner_join(table_A, table_B, by=&quot;customer_ID&quot;)</code></pre>
+<pre><code>## # A tibble: 2 × 8
+##   customer_ID n_orders total_value_orders ave_value_orders last_order_date   age
+##         &lt;dbl&gt;    &lt;dbl&gt;              &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+## 1           1        5                500              100 12/7/20            50
+## 2           2       10                240               24 1/2/18             44
+## # ℹ 2 more variables: gender &lt;chr&gt;, favorite &lt;chr&gt;</code></pre>
 <p><code>left_join</code> Where did customer 4 go? Notice the missing
 data for customer 3. So, <code>left_join</code> keeps all the rows in
 the first table and only the matching rows in the second table. If there
 is no match, it fills in with NA.</p>
+<pre class="r"><code>left_join(table_A, table_B, by=&quot;customer_ID&quot;)</code></pre>
+<pre><code>## # A tibble: 3 × 8
+##   customer_ID n_orders total_value_orders ave_value_orders last_order_date   age
+##         &lt;dbl&gt;    &lt;dbl&gt;              &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+## 1           1        5                500              100 12/7/20            50
+## 2           2       10                240               24 1/2/18             44
+## 3           3        4                 40               10 3/6/20             NA
+## # ℹ 2 more variables: gender &lt;chr&gt;, favorite &lt;chr&gt;</code></pre>
 <p><code>right_join</code> Where did customer 3 go? Notice the missing
 data for customer 4. <code>right_join</code> does the opposite of
 <code>left_join</code>. It keeps all the rows in the second table and
 only the matching rows in the first table. If there is no match, it
 fills in with NA.</p>
+<pre class="r"><code>right_join(table_A, table_B, by=&quot;customer_ID&quot;)</code></pre>
+<pre><code>## # A tibble: 3 × 8
+##   customer_ID n_orders total_value_orders ave_value_orders last_order_date   age
+##         &lt;dbl&gt;    &lt;dbl&gt;              &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+## 1           1        5                500              100 12/7/20            50
+## 2           2       10                240               24 1/2/18             44
+## 3           4       NA                 NA               NA &lt;NA&gt;               30
+## # ℹ 2 more variables: gender &lt;chr&gt;, favorite &lt;chr&gt;</code></pre>
 <p><code>full_join</code> <code>full_join</code> keeps all the rows in
 both tables and fills in with NA where there is no match.</p>
+<pre class="r"><code>full_join(table_A, table_B, by=&quot;customer_ID&quot;)</code></pre>
+<pre><code>## # A tibble: 4 × 8
+##   customer_ID n_orders total_value_orders ave_value_orders last_order_date   age
+##         &lt;dbl&gt;    &lt;dbl&gt;              &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+## 1           1        5                500              100 12/7/20            50
+## 2           2       10                240               24 1/2/18             44
+## 3           3        4                 40               10 3/6/20             NA
+## 4           4       NA                 NA               NA &lt;NA&gt;               30
+## # ℹ 2 more variables: gender &lt;chr&gt;, favorite &lt;chr&gt;</code></pre>
 <p><code>anti_join</code> Provides the rows in the first table for which
 there are not matching values in the second table.</p>
+<pre class="r"><code>anti_join(table_A, table_B, by=&quot;customer_ID&quot;) #use to troubleshoot problematic joins</code></pre>
+<pre><code>## # A tibble: 1 × 5
+##   customer_ID n_orders total_value_orders ave_value_orders last_order_date
+##         &lt;dbl&gt;    &lt;dbl&gt;              &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;          
+## 1           3        4                 40               10 3/6/20</code></pre>
 </div>
 <div id="dates" class="section level2">
 <h2>Dates</h2>
@@ -1556,6 +1609,10 @@ all types. There are many useful functions in <code>lubridate</code>,
 most of which are designed to make working with dates easier. For
 example, you can easily get the current date and time with
 <code>today()</code> and <code>now()</code>.</p>
+<pre class="r"><code>today()</code></pre>
+<pre><code>## [1] &quot;2026-02-25&quot;</code></pre>
+<pre class="r"><code>now()</code></pre>
+<pre><code>## [1] &quot;2026-02-25 13:54:59 PST&quot;</code></pre>
 <p>There are many different options for working with dates and
 date-times in lubridate including <code>ymd</code>, <code>mdy</code>,
 <code>dmy</code>, <code>mdy_hms</code>, <code>ymd_hms</code>. The
@@ -1570,6 +1627,16 @@ dateformat5 &lt;- &quot;20200922 170000&quot;</code></pre>
 <div id="converting-dates" class="section level2">
 <h2>Converting dates</h2>
 <p>We can convert each of the examples above using lubridate.</p>
+<pre class="r"><code>ymd(dateformat1)</code></pre>
+<pre><code>## [1] &quot;2020-09-22&quot;</code></pre>
+<pre class="r"><code>mdy(dateformat2)</code></pre>
+<pre><code>## [1] &quot;2020-09-22&quot;</code></pre>
+<pre class="r"><code>dmy(dateformat3)</code></pre>
+<pre><code>## [1] &quot;2020-09-22&quot;</code></pre>
+<pre class="r"><code>mdy_hms(dateformat4)</code></pre>
+<pre><code>## [1] &quot;2020-09-22 17:00:00 UTC&quot;</code></pre>
+<pre class="r"><code>ymd_hms(dateformat5)</code></pre>
+<pre><code>## [1] &quot;2020-09-22 17:00:00 UTC&quot;</code></pre>
 </div>
 <div id="practice" class="section level2">
 <h2>Practice</h2>
@@ -1581,13 +1648,32 @@ contains all the records of spiders and 2. spiders_locations.csv which
 contains the lat/long for each record. An accession number is a unique
 identifier for each specimen.</p>
 <ol style="list-style-type: decimal">
-<li><p>Load the two files as separate dataframes. Make sure to clean the
-column names.</p></li>
-<li><p>Join the files using an appropriate key and join type.</p></li>
-<li><p>Convert the date column to a date format using
-lubridate.</p></li>
-<li><p>Save your final data to a <code>.csv</code>.</p></li>
+<li>Load the two files as separate dataframes. Make sure to clean the
+column names.</li>
 </ol>
+<pre class="r"><code>spider_records &lt;- read_csv(&quot;data/spider_records.csv&quot;) %&gt;% clean_names()</code></pre>
+<pre class="r"><code>spider_locs &lt;- read_csv(&quot;data/spiders_locations.csv&quot;) %&gt;% clean_names()</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Join the files using an appropriate key and join type.</li>
+</ol>
+<pre class="r"><code>spiders_with_locs &lt;- 
+  left_join(spider_records, spider_locs, by=&quot;accession&quot;)</code></pre>
+<pre class="r"><code>names(spiders_with_locs) #check to see if it worked</code></pre>
+<pre><code>##  [1] &quot;accession&quot; &quot;family&quot;    &quot;genus&quot;     &quot;country&quot;   &quot;state&quot;     &quot;county&quot;   
+##  [7] &quot;locality&quot;  &quot;date&quot;      &quot;collector&quot; &quot;latitude&quot;  &quot;longitude&quot;</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Convert the date column to a date format using lubridate.</li>
+</ol>
+<pre class="r"><code>spiders_with_locs &lt;-spiders_with_locs %&gt;% 
+  mutate(date=dmy(date))</code></pre>
+<pre><code>## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `date = dmy(date)`.
+## Caused by warning:
+## !  2 failed to parse.</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Save your final data to a <code>.csv</code>.</li>
+</ol>
+<pre class="r"><code>write.csv(spiders_with_locs, file=&quot;spiders_with_locs.csv&quot;, row.names=FALSE)</code></pre>
 </div>
 <div id="thats-it-lets-take-a-break" class="section level2">
 <h2>That’s it, let’s take a break!</h2>
