@@ -37,7 +37,7 @@ Recall that `geom_bar` is used when you want to count the number of observations
 
 Make two bar plots showing the number of observations for each order of mammals using both geom types.  
 
-`geom_bar` for counts
+`geom_bar`
 ```{r}
 life_history %>% 
   ggplot(aes(x=order))+
@@ -45,15 +45,16 @@ life_history %>%
   coord_flip()
 ```
 
-`geom_col` get to see the count of each and then the plot, when u have x and y
+`geom_col`
 ```{r}
 life_history %>% 
-  count(order,sort=T)
+  count(order, sort=T)
 ```
+
 ```{r}
 life_history %>% 
-  count(order,sort=T) %>% 
-  ggplot(aes(x=order,y=n))+
+  count(order, sort=T) %>% 
+  ggplot(aes(x=order, y=n))+
   geom_col()+
   coord_flip()
 ```
@@ -62,32 +63,32 @@ What if we wanted a bar plot of the mean mass for each order?
 ```{r}
 life_history %>% 
   group_by(order) %>% 
-  summarize(mean_mass=mean(mass,na.rm=T)) %>% 
+  summarize(mean_mass=mean(mass, na.rm=T)) %>% 
   arrange(desc(mean_mass))
 ```
+
 ```{r}
 life_history %>% 
   group_by(order) %>% 
-  summarize(mean_mass=mean(mass,na.rm=T)) %>% 
+  summarize(mean_mass=mean(mass, na.rm=T)) %>% 
   arrange(desc(mean_mass)) %>% 
-  ggplot(aes(x=order,y=mean_mass))+
+  ggplot(aes(x=order, y=mean_mass))+
   geom_col()+
   coord_flip()
 ```
 
-
 There are a few problems here. First, the y-axis is in scientific notation. We can fix this by adjusting the options for the session.
 ```{r}
-options(scipen=999) #cancels scientific notation for the session, then run the plot again to take it out
+options(scipen=999) #cancels scientific notation for the session
 ```
 
 Next, the y-axis is not on a log scale. We can fix this by adding `scale_y_log10()`.
 ```{r}
 life_history %>% 
   group_by(order) %>% 
-  summarize(mean_mass=mean(mass,na.rm=T)) %>% 
+  summarize(mean_mass=mean(mass, na.rm=T)) %>% 
   arrange(desc(mean_mass)) %>% 
-  ggplot(aes(x=order,y=mean_mass))+
+  ggplot(aes(x=order, y=mean_mass))+
   geom_col()+
   coord_flip()+
   scale_y_log10()
@@ -97,15 +98,16 @@ Lastly, we can adjust the x-axis labels to make them more readable. We do this u
 ```{r}
 life_history %>% 
   group_by(order) %>% 
-  summarize(mean_mass=mean(mass,na.rm=T)) %>% 
+  summarize(mean_mass=mean(mass, na.rm=T)) %>% 
   arrange(desc(mean_mass)) %>% 
-  ggplot(aes(x=reorder(order,mean_mass), y=mean_mass))+
+  ggplot(aes(x=reorder(order, mean_mass), y=mean_mass))+
   geom_col()+
-  coord_flip()
+  coord_flip()+
+  scale_y_log10()
 ```
 
 ## Scatterplots
-Scatter plots allow for comparisons of two continuous variables. Make a scatterplot that compares gestation time and wean mass. relationship btwn things
+Scatter plots allow for comparisons of two continuous variables. Make a scatterplot that compares gestation time and wean mass.
 ```{r}
 life_history %>% 
   ggplot(aes(x=gestation, y=wean_mass))+
@@ -115,13 +117,12 @@ life_history %>%
 ```
 
 ## Boxplots
-Box plots are used to visualize a range of values. So, on the x-axis we have a categorical variable and the y-axis is the range. Make a box plot that compares mass across orders. for range, when u use geom col u can prolly use box plot
+Box plots are used to visualize a range of values. So, on the x-axis we have a categorical variable and the y-axis is the range. Make a box plot that compares mass across orders.
 ```{r}
 life_history %>% 
-  ggplot(aes(x=order,y=log10(mass)))+ #another way of scaling
+  ggplot(aes(x=order, y=log10(mass)))+ #another way of scaling
   geom_boxplot(na.rm=T)+
   coord_flip()
-
 ```
 
 ## Aesthetics: Labels
@@ -134,7 +135,7 @@ names(life_history)
 Is there a relationship between mass and litter size; i.e. do larger mammals have more offspring?
 ```{r}
 life_history %>% 
-  ggplot(aes(x=mass,y=litter_size))+
+  ggplot(aes(x=mass, y=litter_size))+
   geom_point(na.rm=T)+
   scale_x_log10()+
   geom_smooth(method=lm, se=F, na.rm=T)
@@ -143,22 +144,26 @@ life_history %>%
 The plot looks clean, but it is incomplete. A reader unfamiliar with the data might have a difficult time interpreting the labels. To add custom labels, we use the `labs` command.
 ```{r}
 life_history %>% 
-  ggplot(aes(x=mass,y=litter_size))+
+  ggplot(aes(x=mass, y=litter_size))+
   geom_point(na.rm=T)+
   scale_x_log10()+
   geom_smooth(method=lm, se=F, na.rm=T)+
-  labs(title="Mass vs litter size", x="Mass(g)", y= "litter size")
+  labs(title="Mass vs. Litter Size",
+       x="Mass (g)",
+       y="Litter Size")
 ```
 
 We can adjust the plot further by specifying the size and face of the text. We do this using `theme()`. The `rel()` option changes the relative size of the title to keep things consistent. Adding `hjust` controls the title position.
 ```{r}
 life_history %>% 
-  ggplot(aes(x=mass,y=litter_size))+
+  ggplot(aes(x=mass, y=litter_size))+
   geom_point(na.rm=T)+
   scale_x_log10()+
   geom_smooth(method=lm, se=F, na.rm=T)+
-  labs(title="Mass vs litter size", x="Mass(g)", y= "litter size")+
-  theme(plot.title=element_text(size=rel(1.5), hjust=0.5))
+  labs(title="Mass vs. Litter Size",
+       x="Mass (g)",
+       y="Litter Size")+
+  theme(plot.title=element_text(size=rel(2), hjust=.5))
 ```
 
 ## That's it! Let's take a break and then move on to part 2!  
