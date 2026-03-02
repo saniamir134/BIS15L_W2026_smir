@@ -175,6 +175,9 @@ barplot(rep(1,7), axes=FALSE, col=my_palette)
 
 Now we just identify `my_palette` as part of `scale_fill_manual()`
 ```{r}
+my_cols <- c("#66CDAA",
+             "#FFCD00FF")
+
 p+scale_fill_manual(values=my_cols)+
   theme(legend.position = "bottom",
         axis.text.x = element_text(angle = 60, hjust=1))+
