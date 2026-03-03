@@ -1,0 +1,856 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Midterm 2 W26},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Midterm 2 W26}
+\author{}
+\date{\vspace{-2.5em}2026-03-03}
+
+\begin{document}
+\maketitle
+
+\subsection{Instructions}\label{instructions}
+
+This is an in-person exam. Your exam must be complete and uploaded to
+Gradescope by 2:00p.
+
+Answer the following questions and complete the exercises in RMarkdown.
+Please embed all of your code and push your final work to your
+repository. Your code must be organized, clean, and run free from
+errors. Remember, you must remove the \texttt{\#} for any included code
+chunks to run. Be sure to add your name to the author header above.
+
+Your code must knit in order to be considered. If you are stuck and
+cannot answer a question, then comment out your code and knit the
+document. You may use your notes, labs, and homework to help you
+complete this exam. Do not use any other resources- including AI
+assistance or other students' work.
+
+Don't forget to answer any questions that are asked in the prompt! Each
+question must be coded; it cannot be answered by a sort in a spreadsheet
+or a written response only.
+
+For all plots you create, a title and clearly labeled axes must be
+provided.
+
+Be sure to push your completed midterm to your repository and upload the
+document to Gradescope. \emph{Incorrectly uploading the exam to
+Gradescope will result in a 5 point deduction.} This exam is worth 50
+points.
+
+\subsection{Load the libraries}\label{load-the-libraries}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(janitor)}
+\FunctionTok{library}\NormalTok{(naniar)}
+\FunctionTok{library}\NormalTok{(ggmap)}
+\FunctionTok{library}\NormalTok{(lubridate)}
+\FunctionTok{library}\NormalTok{(shiny)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{API Key}\label{api-key}
+
+Since you will build a map as part of the exam, take a moment to
+register your API key. You may need to look up your
+\href{https://client.stadiamaps.com/dashboard/overview}{stadia maps} API
+key online (please do that now).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{register\_stadiamaps}\NormalTok{(}\StringTok{"7e1ebae2{-}6056{-}40c4{-}a2af{-}d1b197485428"}\NormalTok{, }\AttributeTok{write =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{About the data}\label{about-the-data}
+
+This study is focused on the fasting behavior of polar bears in the
+Southern Beaufort (SB) and Chukchi seas (CS). The data were collected
+from 1983-2017 and include measurements of blood urea nitrogen (BUN) and
+creatinine, which are used to calculate a ratio that indicates whether a
+bear is fasting or not. The original paper is included in the data
+folder. \emph{It may help to quickly read the abstract before starting
+the exam.}
+
+The data are from: Rode, K.D., Wilson, R.R., Douglas, D.C., Muhlenbruch,
+V., Atwood, T.C., Regehr, E.V., Richardson, E.S., Pilfold, N.W.,
+Derocher, A.E., Durner, G.M., Stirling, I., Amstrup, S.C., St.~Martin,
+M., Pagano, A.M., and others, 2017, Spring fasting behavior in a marine
+apex predator provides an index of ecosystem productivity: Global Change
+Biology, v. 24, no. 1, p.~410--423,
+\url{https://doi.org/10.1111/gcb.13933}.
+
+\subsection{Data resources}\label{data-resources}
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://data.usgs.gov/datacatalog/data/USGS:ASC141}
+\item
+  \url{https://www.sciencebase.gov/catalog/item/61a1a9e7d34eb622f69743d2}
+\end{itemize}
+
+\subsection{The variables include:}\label{the-variables-include}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{bear\_id}: A unique number given to each bear.\\
+\item
+  \texttt{capture\_date}: The data when the bear was tranquilized and
+  assessed.\\
+\item
+  \texttt{popn}: The population to which the bear belongs.\\
+\item
+  \texttt{sex}: Sex of each bear.\\
+\item
+  \texttt{age\_class}: The age class of each bear (A=adult,
+  S=subadult).\\
+\item
+  \texttt{mating}: Whether or not the bear is pursuing a mate.\\
+\item
+  \texttt{denning}: Whether or not the bear denned last year.\\
+\item
+  \texttt{lat}: Latitude where the bear was located.\\
+\item
+  \texttt{long}: Longitude where the bear was located.\\
+\item
+  \texttt{urea\_nitrogen}: Concentration of urea nitrogen.\\
+\item
+  \texttt{creatinine}: Concentration of creatinine.
+\end{itemize}
+
+\subsection{Load the data}\label{load-the-data}
+
+Run the code chunk below to load the data, clean the names, and do some
+tidying.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears }\OtherTok{\textless{}{-}} 
+  \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/polarBear\_serumUreaCreatinine\_beaufortChukchi\_rode.csv"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{clean\_names}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{den\_method, }\SpecialCharTok{{-}}\NormalTok{no\_cubs, }\SpecialCharTok{{-}}\NormalTok{cub\_age) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(age\_class}\SpecialCharTok{==}\FunctionTok{c}\NormalTok{(}\StringTok{"A"}\NormalTok{, }\StringTok{"S"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex=}\FunctionTok{toupper}\NormalTok{(sex), }
+         \AttributeTok{age\_class=}\FunctionTok{toupper}\NormalTok{(age\_class))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  (2 points) List the variable names and use a summary function to get
+  an idea of the data structure.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(polar\_bears)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     bear_id       capture_date            popn               sex           
+##  Min.   :  697   Min.   :1983-04-23   Length:519         Length:519        
+##  1st Qu.:20166   1st Qu.:2000-04-10   Class :character   Class :character  
+##  Median :20705   Median :2008-04-12   Mode  :character   Mode  :character  
+##  Mean   :18040   Mean   :2004-07-02                                        
+##  3rd Qu.:21220   3rd Qu.:2011-03-31                                        
+##  Max.   :99990   Max.   :2016-04-22                                        
+##   age_class            mating            denning               lat       
+##  Length:519         Length:519         Length:519         Min.   :62.46  
+##  Class :character   Class :character   Class :character   1st Qu.:68.11  
+##  Mode  :character   Mode  :character   Mode  :character   Median :70.53  
+##                                                           Mean   :69.86  
+##                                                           3rd Qu.:71.00  
+##                                                           Max.   :72.70  
+##       long        urea_nitrogen     creatinine   
+##  Min.   :-172.2   Min.   : 1.00   Min.   :0.350  
+##  1st Qu.:-165.2   1st Qu.: 6.00   1st Qu.:0.850  
+##  Median :-150.7   Median :11.00   Median :1.050  
+##  Mean   :-153.7   Mean   :15.13   Mean   :1.079  
+##  3rd Qu.:-146.5   3rd Qu.:21.25   3rd Qu.:1.285  
+##  Max.   :-134.8   Max.   :69.00   Max.   :2.350
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(polar\_bears)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "bear_id"       "capture_date"  "popn"          "sex"          
+##  [5] "age_class"     "mating"        "denning"       "lat"          
+##  [9] "long"          "urea_nitrogen" "creatinine"
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  (3 points) How are NA's represented and where are they distributed in
+  the variables? Use the \texttt{naniar} package to visualize the
+  distribution of NA's in the data and replace any alternative
+  representations of NA with actual NA values.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 519 x 11
+##    bear_id capture_date popn  sex   age_class mating denning   lat  long
+##      <dbl> <date>       <chr> <chr> <chr>     <chr>  <chr>   <dbl> <dbl>
+##  1    6398 1985-04-28   SB    F     A         no     yes      70.4 -148.
+##  2    6384 1991-04-13   SB    F     A         no     yes      70.0 -150.
+##  3    6520 1992-04-18   SB    F     A         no     yes      70.9 -145.
+##  4    6559 2000-04-12   SB    F     A         no     yes      70.0 -142.
+##  5   20629 2003-04-16   SB    F     A         no     yes      70.5 -145.
+##  6   20876 2007-04-01   SB    F     A         no     yes      71.1 -153.
+##  7   20354 2009-04-16   SB    F     A         no     yes      70.7 -145.
+##  8   21024 2009-04-25   SB    F     A         no     yes      70.5 -147.
+##  9   20764 2009-05-01   SB    F     A         no     yes      70.8 -149.
+## 10   21045 2009-05-19   SB    F     A         no     yes      70.7 -148.
+## # i 509 more rows
+## # i 2 more variables: urea_nitrogen <dbl>, creatinine <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#NAs represented as unknown , in mating}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears\_no\_nas }\OtherTok{\textless{}{-}} 
+  \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/polarBear\_serumUreaCreatinine\_beaufortChukchi\_rode.csv"}\NormalTok{, }\AttributeTok{na=}\StringTok{"{-}999"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{clean\_names}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 1048 Columns: 14
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr  (8): Popn, Sex, AgeClass, Mating, Denning, den_method, NoCubs, CubAge
+## dbl  (5): BearID, Lat, Long, Urea Nitrogen, Creatinine
+## date (1): Capture Date
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{everything}\NormalTok{(), }\SpecialCharTok{\textasciitilde{}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.))))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 11
+##   bear_id capture_date  popn   sex age_class mating denning   lat  long
+##     <int>        <int> <int> <int>     <int>  <int>   <int> <int> <int>
+## 1       0            0     0     0         0      0       0     0     0
+## # i 2 more variables: urea_nitrogen <int>, creatinine <int>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{miss\_var\_summary}\NormalTok{(polar\_bears\_no\_nas)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 14 x 3
+##    variable      n_miss pct_miss
+##    <chr>          <int>    <num>
+##  1 bear_id            0        0
+##  2 capture_date       0        0
+##  3 popn               0        0
+##  4 sex                0        0
+##  5 age_class          0        0
+##  6 mating             0        0
+##  7 denning            0        0
+##  8 den_method         0        0
+##  9 lat                0        0
+## 10 long               0        0
+## 11 no_cubs            0        0
+## 12 cub_age            0        0
+## 13 urea_nitrogen      0        0
+## 14 creatinine         0        0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears\_no\_nas }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{gg\_miss\_var}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-9-1.pdf}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  (6 points) Is sampling even for both sexes? Make a count the shows the
+  number of males and females sampled by population and make a plot to
+  visualize the counts.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(polar\_bears)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "bear_id"       "capture_date"  "popn"          "sex"          
+##  [5] "age_class"     "mating"        "denning"       "lat"          
+##  [9] "long"          "urea_nitrogen" "creatinine"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{count}\NormalTok{(sex, }\AttributeTok{sort=}\NormalTok{T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 2
+##   sex       n
+##   <chr> <int>
+## 1 F       292
+## 2 M       227
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{sex))}\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{coord\_flip}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"Observations by sex"}\NormalTok{,}
+       \AttributeTok{x=}\StringTok{"sex"}\NormalTok{,}
+       \AttributeTok{y=}\ConstantTok{NULL}\NormalTok{) }\CommentTok{\#take away the y axis label}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-12-1.pdf}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  (6 points) How many bears were sampled in each year for both
+  populations? Make a line plot(s) to visualize sampling by year for
+  both populations. (hint: you will need to pull apart the date to get
+  the year in its own column)
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(polar\_bears)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "bear_id"       "capture_date"  "popn"          "sex"          
+##  [5] "age_class"     "mating"        "denning"       "lat"          
+##  [9] "long"          "urea_nitrogen" "creatinine"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 519 x 11
+##    bear_id capture_date popn  sex   age_class mating denning   lat  long
+##      <dbl> <date>       <chr> <chr> <chr>     <chr>  <chr>   <dbl> <dbl>
+##  1    6398 1985-04-28   SB    F     A         no     yes      70.4 -148.
+##  2    6384 1991-04-13   SB    F     A         no     yes      70.0 -150.
+##  3    6520 1992-04-18   SB    F     A         no     yes      70.9 -145.
+##  4    6559 2000-04-12   SB    F     A         no     yes      70.0 -142.
+##  5   20629 2003-04-16   SB    F     A         no     yes      70.5 -145.
+##  6   20876 2007-04-01   SB    F     A         no     yes      71.1 -153.
+##  7   20354 2009-04-16   SB    F     A         no     yes      70.7 -145.
+##  8   21024 2009-04-25   SB    F     A         no     yes      70.5 -147.
+##  9   20764 2009-05-01   SB    F     A         no     yes      70.8 -149.
+## 10   21045 2009-05-19   SB    F     A         no     yes      70.7 -148.
+## # i 509 more rows
+## # i 2 more variables: urea_nitrogen <dbl>, creatinine <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears\_line }\OtherTok{\textless{}{-}}\NormalTok{ polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{count}\NormalTok{(capture\_date, }\AttributeTok{sort=}\NormalTok{T)}
+
+\NormalTok{polar\_bears\_line}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 377 x 2
+##    capture_date     n
+##    <date>       <int>
+##  1 2008-04-26       4
+##  2 2013-04-17       4
+##  3 1984-05-06       3
+##  4 1989-04-01       3
+##  5 1989-04-05       3
+##  6 2002-04-19       3
+##  7 2004-03-31       3
+##  8 2005-04-06       3
+##  9 2005-04-12       3
+## 10 2006-04-21       3
+## # i 367 more rows
+\end{verbatim}
+
+4=yrs on its own 6-7=make new variable to store it as the polarbear gets
+polarbears bc u need those vairables
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears\_line }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{((capture\_date}\SpecialCharTok{\textgreater{}=}\DecValTok{1980{-}04{-}28}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{capture\_date, }\AttributeTok{y=}\NormalTok{n))}\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{shape=}\DecValTok{5}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks=}\DecValTok{1985{-}04{-}28}\SpecialCharTok{:}\DecValTok{2016{-}04{-}22}\NormalTok{, }\AttributeTok{minor\_breaks =} \ConstantTok{NULL}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{angle=}\DecValTok{60}\NormalTok{, }\AttributeTok{hjust=}\DecValTok{1}\NormalTok{))}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"bears each yr for populations"}\NormalTok{,}
+       \AttributeTok{x=}\StringTok{"Year"}\NormalTok{,}
+       \AttributeTok{y=}\StringTok{"bears captured"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-16-1.pdf}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  (2 points) What are the min, median, mean, and max values for
+  \texttt{urea\_nitrogen} and \texttt{creatinine}?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(polar\_bears)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "bear_id"       "capture_date"  "popn"          "sex"          
+##  [5] "age_class"     "mating"        "denning"       "lat"          
+##  [9] "long"          "urea_nitrogen" "creatinine"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
+\FunctionTok{summarize}\NormalTok{(}
+    \AttributeTok{min\_UR =} \FunctionTok{min}\NormalTok{(urea\_nitrogen, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{median\_UR =} \FunctionTok{median}\NormalTok{(urea\_nitrogen, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{mean\_UR =} \FunctionTok{mean}\NormalTok{(urea\_nitrogen, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{max\_UR =} \FunctionTok{max}\NormalTok{(urea\_nitrogen, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{min\_CR =} \FunctionTok{min}\NormalTok{(creatinine, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{median\_CR =} \FunctionTok{median}\NormalTok{(creatinine, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{mean\_CR =} \FunctionTok{mean}\NormalTok{(creatinine, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{max\_CR =} \FunctionTok{max}\NormalTok{(creatinine, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{.groups =} \StringTok{"drop"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 8
+##   min_UR median_UR mean_UR max_UR min_CR median_CR mean_CR max_CR
+##    <dbl>     <dbl>   <dbl>  <dbl>  <dbl>     <dbl>   <dbl>  <dbl>
+## 1      1        11    15.1     69   0.35      1.05    1.08   2.35
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  (3 points) As explained above, the ratio of \texttt{urea\_nitrogen} to
+  \texttt{creatinine} is used as an index of fasting. To calculate the
+  ratio, we need to multiply \texttt{urea\_nitrogen} by 0.466, then
+  divide by \texttt{creatinine}. Create a new variable called
+  \texttt{un\_creat\_ratio} that contains this calculation.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{un\_creat\_ratio }\OtherTok{\textless{}{-}}\NormalTok{ polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{un\_creat\_ratio =}\NormalTok{ (urea\_nitrogen }\SpecialCharTok{*} \FloatTok{0.466}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ creatinine)}
+
+\NormalTok{un\_creat\_ratio}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 519 x 12
+##    bear_id capture_date popn  sex   age_class mating denning   lat  long
+##      <dbl> <date>       <chr> <chr> <chr>     <chr>  <chr>   <dbl> <dbl>
+##  1    6398 1985-04-28   SB    F     A         no     yes      70.4 -148.
+##  2    6384 1991-04-13   SB    F     A         no     yes      70.0 -150.
+##  3    6520 1992-04-18   SB    F     A         no     yes      70.9 -145.
+##  4    6559 2000-04-12   SB    F     A         no     yes      70.0 -142.
+##  5   20629 2003-04-16   SB    F     A         no     yes      70.5 -145.
+##  6   20876 2007-04-01   SB    F     A         no     yes      71.1 -153.
+##  7   20354 2009-04-16   SB    F     A         no     yes      70.7 -145.
+##  8   21024 2009-04-25   SB    F     A         no     yes      70.5 -147.
+##  9   20764 2009-05-01   SB    F     A         no     yes      70.8 -149.
+## 10   21045 2009-05-19   SB    F     A         no     yes      70.7 -148.
+## # i 509 more rows
+## # i 3 more variables: urea_nitrogen <dbl>, creatinine <dbl>,
+## #   un_creat_ratio <dbl>
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  (4 points) The authors of the study categorized bears as fasting if
+  their \texttt{un\_creat\_ratio} was less than or equal to 10. Use
+  \texttt{case\_when()} to create a new variable called \texttt{fasting}
+  that categorizes bears as fasting or not.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fasting10 }\OtherTok{\textless{}{-}}\NormalTok{ un\_creat\_ratio }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{fasting=}\FunctionTok{case\_when}\NormalTok{(un\_creat\_ratio}\SpecialCharTok{\textless{}=}\DecValTok{10} \SpecialCharTok{\textasciitilde{}} \StringTok{"not fasting"}\NormalTok{,}
+\NormalTok{                                   un\_creat\_ratio}\SpecialCharTok{\textgreater{}}\DecValTok{10} \SpecialCharTok{\textasciitilde{}} \StringTok{"fasting"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(popn, un\_creat\_ratio, fasting) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{fasting=}\FunctionTok{factor}\NormalTok{(fasting,}
+                                \AttributeTok{levels=}\FunctionTok{c}\NormalTok{(}\StringTok{"not fasting"}\NormalTok{,}
+                                         \StringTok{"fasting"}\NormalTok{)))}
+
+\NormalTok{fasting10}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 519 x 3
+##    popn  un_creat_ratio fasting    
+##    <chr>          <dbl> <fct>      
+##  1 SB            10.1   fasting    
+##  2 SB             0.964 not fasting
+##  3 SB            16.4   fasting    
+##  4 SB             7.63  not fasting
+##  5 SB             4.66  not fasting
+##  6 SB             1.79  not fasting
+##  7 SB            21.1   fasting    
+##  8 SB            19.3   fasting    
+##  9 SB             7.57  not fasting
+## 10 SB            27.0   fasting    
+## # i 509 more rows
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  (6 points) The authors found that the number of fasting bears
+  increased in the SB population but decreased in the CS population.
+  Make a plot(s) that shows the number of fasting bears by year for both
+  populations to visualize this trend.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fasting10 }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{drop\_na}\NormalTok{(fasting) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#get rid of NA\textquotesingle{}s}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fasting, }\AttributeTok{fill=}\NormalTok{fasting))}\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"fasting bears by year for both populations "}\NormalTok{,}
+       \AttributeTok{x=}\StringTok{"fasting bear"}\NormalTok{,}
+       \AttributeTok{y=}\ConstantTok{NULL}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position=}\StringTok{"none"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-21-1.pdf}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{8}
+\tightlist
+\item
+  (8 points) Where are the polar bears used in this study located? Make
+  a static (not leaflet) distribution map that shows the locations of
+  bears by population. (hint: use \texttt{color=popn} in the
+  \texttt{aes()} of \texttt{geom\_point()})
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 519 x 11
+##    bear_id capture_date popn  sex   age_class mating denning   lat  long
+##      <dbl> <date>       <chr> <chr> <chr>     <chr>  <chr>   <dbl> <dbl>
+##  1    6398 1985-04-28   SB    F     A         no     yes      70.4 -148.
+##  2    6384 1991-04-13   SB    F     A         no     yes      70.0 -150.
+##  3    6520 1992-04-18   SB    F     A         no     yes      70.9 -145.
+##  4    6559 2000-04-12   SB    F     A         no     yes      70.0 -142.
+##  5   20629 2003-04-16   SB    F     A         no     yes      70.5 -145.
+##  6   20876 2007-04-01   SB    F     A         no     yes      71.1 -153.
+##  7   20354 2009-04-16   SB    F     A         no     yes      70.7 -145.
+##  8   21024 2009-04-25   SB    F     A         no     yes      70.5 -147.
+##  9   20764 2009-05-01   SB    F     A         no     yes      70.8 -149.
+## 10   21045 2009-05-19   SB    F     A         no     yes      70.7 -148.
+## # i 509 more rows
+## # i 2 more variables: urea_nitrogen <dbl>, creatinine <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_dups }\OtherTok{\textless{}{-}}\NormalTok{ polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{distinct}\NormalTok{(popn, }\AttributeTok{.keep\_all =} \ConstantTok{TRUE}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_dups }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(popn) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summary}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      popn          
+##  Length:2          
+##  Class :character  
+##  Mode  :character
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#bbox2 \textless{}{-} make\_bbox(popn, f=0.3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#map2 \textless{}{-} get\_stadiamap(bbox2, maptype = "stamen\_terrain", zoom=7)}
+\CommentTok{\#ggmap(map2)}
+
+\CommentTok{\#ggmap(map2)+}
+\CommentTok{\#  geom\_point(data=sharks\_dups, aes(color=popn), size=0.8)+}
+\CommentTok{\#  labs(x="Longitude", y="Latitude", title="popn")}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{9}
+\tightlist
+\item
+  (10 points) Build a simple shiny app that shows the range of
+  \texttt{un\_creat\_ratio} values for both populations. The user should
+  be able to select the fill variable and choose between sex, mating,
+  age\_class, denning, and fasting. Please use the code chunk below so
+  that your exam knits.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears }\OtherTok{\textless{}{-}} 
+  \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/polarBear\_serumUreaCreatinine\_beaufortChukchi\_rode.csv"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{clean\_names}\NormalTok{()}
+
+\NormalTok{ui }\OtherTok{\textless{}{-}} \FunctionTok{dashboardPage}\NormalTok{(}
+  
+  \FunctionTok{dashboardHeader}\NormalTok{(}\AttributeTok{title =} \StringTok{"range of un\_creat\_ratio values for both populations"}\NormalTok{),}
+  
+  \FunctionTok{dashboardSidebar}\NormalTok{(}
+    
+    \FunctionTok{selectInput}\NormalTok{(}\StringTok{"y"}\NormalTok{,}
+                \StringTok{"Select Variable"}\NormalTok{,}
+                \AttributeTok{choices =} \FunctionTok{c}\NormalTok{(}\StringTok{"sex"}\NormalTok{, }\StringTok{"mating"}\NormalTok{, }\StringTok{"age\_class"}\NormalTok{, }\StringTok{"denning"}\NormalTok{, }\StringTok{"fasting"}\NormalTok{),}
+                \AttributeTok{selected =} \StringTok{"popn"}\NormalTok{)}
+    
+\NormalTok{  ),}
+  
+  \FunctionTok{dashboardBody}\NormalTok{(}
+    
+    \FunctionTok{plotOutput}\NormalTok{(}\StringTok{"plot"}\NormalTok{, }\AttributeTok{width =} \StringTok{"600px"}\NormalTok{, }\AttributeTok{height =} \StringTok{"500px"}\NormalTok{)}
+    
+\NormalTok{  )}
+  
+\NormalTok{)}
+
+\NormalTok{server }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(input, output, session) \{}
+  
+\NormalTok{  output}\SpecialCharTok{$}\NormalTok{plot }\OtherTok{\textless{}{-}} \FunctionTok{renderPlot}\NormalTok{(\{}
+    
+\NormalTok{    polar\_bears }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ un\_creat\_ratio,}
+                 \AttributeTok{y =}\NormalTok{ .data[[input}\SpecialCharTok{$}\NormalTok{y]],}
+                 \AttributeTok{fill =}\NormalTok{ un\_creat\_ratio)) }\SpecialCharTok{+}
+      \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.75}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"range of un\_creat\_ratio values by popn CS"}\NormalTok{,}
+           \AttributeTok{x =} \StringTok{"CS"}\NormalTok{,}
+           \AttributeTok{y =}\NormalTok{ input}\SpecialCharTok{$}\NormalTok{y,}
+           \AttributeTok{fill =} \StringTok{"CS"}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{theme\_light}\NormalTok{()}
+    
+\NormalTok{  \})}
+  
+\NormalTok{\}}
+
+\FunctionTok{shinyApp}\NormalTok{(ui, server)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Submit the Midterm}\label{submit-the-midterm}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Save your work and knit the .rmd file.\\
+\item
+  Open the .html file and ``print'' it to a .pdf file in Google Chrome
+  (not Safari).\\
+\item
+  Go to the class Canvas page and open Gradescope.\\
+\item
+  Submit your .pdf file to the midterm assignment- be sure to assign the
+  pages to the correct questions.\\
+\item
+  Commit and push your work to your repository.
+\end{enumerate}
+
+\end{document}

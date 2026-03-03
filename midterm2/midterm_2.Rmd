@@ -2,9 +2,11 @@
 title: "Midterm 2 W26"
 date: "`r Sys.Date()`"
 output:
+  pdf_document:
+    toc: false
   html_document:
     theme: spacelab
-    toc: no
+    toc: false
 ---
 
 ## Instructions
@@ -132,34 +134,27 @@ polar_bears
 ```
 
 ```{r}
-polar_bears %>% 
-  filter((capture_date>=1980-04-28) & popn=="SB"|popn=="CS") %>% 
-  ggplot(aes(x=capture_date, y=popn))+
-  geom_line()+
-  geom_point(shape=5)+
-  scale_x_continuous(breaks=1985-04-28:2016-04-22, minor_breaks = NULL)+
-  theme(axis.text.x = element_text(angle=60, hjust=1))+
-  labs(title="bears each yr for both populations",
-       x="Year",
-       y="bears captured")
+polar_bears_line <- polar_bears %>% 
+  count(capture_date, sort=T)
+
+polar_bears_line
 ```
+4=yrs on its own
+6-7=make new variable to store it as the polarbear gets polarbears bc u need those vairables
+
 ```{r}
-polar_bears %>% 
+polar_bears_line %>% 
+  filter((capture_date>=1980-04-28)) %>% 
   ggplot(aes(x=capture_date, y=n))+
   geom_line()+
   geom_point(shape=5)+
   scale_x_continuous(breaks=1985-04-28:2016-04-22, minor_breaks = NULL)+
   theme(axis.text.x = element_text(angle=60, hjust=1))+
-  labs(title="bears each yr for both populations",
+  labs(title="bears each yr for populations",
        x="Year",
        y="bears captured")
 ```
-```{r}
-polar_bears_line <- polar_bears %>% 
-  count(popn, sort=T)
-```
-4=yrs on its own
-6-7=make new variable to store it as the polarbear gets polarbears bc u need those vairables
+
 
 5. (2 points) What are the min, median, mean, and max values for `urea_nitrogen` and `creatinine`?
 ```{r}
@@ -195,19 +190,29 @@ un_creat_ratio
 7. (4 points) The authors of the study categorized bears as fasting if their `un_creat_ratio` was less than or equal to 10. Use `case_when()` to create a new variable called `fasting` that categorizes bears as fasting or not.
 
 ```{r}
-fasting10 <- polar_bears %>% 
+fasting10 <- un_creat_ratio %>% 
   mutate(fasting=case_when(un_creat_ratio<=10 ~ "not fasting",
                                    un_creat_ratio>10 ~ "fasting")) %>% 
   select(popn, un_creat_ratio, fasting) %>% 
   mutate(fasting=factor(fasting,
                                 levels=c("not fasting",
                                          "fasting")))
-```
 
-4= x is yr, y= has to be a count
+fasting10
+```
 
 
 8. (6 points) The authors found that the number of fasting bears increased in the SB population but decreased in the CS population. Make a plot(s) that shows the number of fasting bears by year for both populations to visualize this trend.
+```{r}
+fasting10 %>% 
+  drop_na(fasting) %>% #get rid of NA's
+  ggplot(aes(x=fasting, fill=fasting))+
+  geom_bar()+
+  labs(title="fasting bears by year for both populations ",
+       x="fasting bear",
+       y=NULL)+
+  theme(legend.position="none")
+```
 
 9. (8 points) Where are the polar bears used in this study located? Make a static (not leaflet) distribution map that shows the locations of  bears by population. (hint: use `color=popn` in the `aes()` of `geom_point()`)
 ```{r}
@@ -224,12 +229,17 @@ polar_dups %>%
   summary()
 ```
 ```{r}
-bbox2 <- make_bbox(popn, f=0.3)
+#bbox2 <- make_bbox(popn, f=0.3)
 ```
 
 ```{r}
 
-map2 <- get_stadiamap(bbox2, maptype = "stamen_terrain", zoom=7)
+#map2 <- get_stadiamap(bbox2, maptype = "stamen_terrain", zoom=7)
+#ggmap(map2)
+
+#ggmap(map2)+
+#  geom_point(data=sharks_dups, aes(color=popn), size=0.8)+
+#  labs(x="Longitude", y="Latitude", title="popn")
 
 ```
 
@@ -249,7 +259,7 @@ ui <- dashboardPage(
     selectInput("y",
                 "Select Variable",
                 choices = c("sex", "mating", "age_class", "denning", "fasting"),
-                selected = "age")
+                selected = "popn")
     
   ),
   
@@ -265,15 +275,15 @@ server <- function(input, output, session) {
   
   output$plot <- renderPlot({
     
-    elephants %>%
-      ggplot(aes(x = sex,
+    polar_bears %>%
+      ggplot(aes(x = un_creat_ratio,
                  y = .data[[input$y]],
-                 fill = sex)) +
+                 fill = un_creat_ratio)) +
       geom_boxplot(alpha = 0.75) +
-      labs(title = "Range of Elephant Measurements by Sex",
-           x = "Sex",
+      labs(title = "range of un_creat_ratio values by popn CS",
+           x = "CS",
            y = input$y,
-           fill = "Sex") +
+           fill = "CS") +
       theme_light()
     
   })
