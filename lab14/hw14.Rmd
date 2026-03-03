@@ -37,6 +37,11 @@ sharks_dups <- sharks %>%
 ```
 
 ```{r}
+names(sharks)
+```
+
+
+```{r}
 sharks_dups %>% 
   select(longitude, latitude) %>% 
   summary()

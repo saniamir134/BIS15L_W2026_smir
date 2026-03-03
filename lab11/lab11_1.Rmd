@@ -36,6 +36,8 @@ options(scipen=999) #cancels the use of scientific notation for the session
 For these exercises, we are going to use [Gapminder](https://www.gapminder.org/data/) data on population (pop), GDP per capita (gdp), and life expectancy (lex). These data were downloaded and compiled using the `gapminder_compile.Rmd` script in the data folder.
 ```{r message=FALSE, warning=FALSE}
 gap <- read_csv("data/gapminder.csv") %>% clean_names()
+
+gap
 ```
 
 ## Line plots
