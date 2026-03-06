@@ -105,7 +105,7 @@
 
 \title{Midterm 2 W26}
 \author{}
-\date{\vspace{-2.5em}2026-03-03}
+\date{\vspace{-2.5em}2026-03-05}
 
 \begin{document}
 \maketitle
@@ -333,28 +333,8 @@ tidying.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{polar\_bears\_no\_nas }\OtherTok{\textless{}{-}} 
-  \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/polarBear\_serumUreaCreatinine\_beaufortChukchi\_rode.csv"}\NormalTok{, }\AttributeTok{na=}\StringTok{"{-}999"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{clean\_names}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Rows: 1048 Columns: 14
-## -- Column specification --------------------------------------------------------
-## Delimiter: ","
-## chr  (8): Popn, Sex, AgeClass, Mating, Denning, den_method, NoCubs, CubAge
-## dbl  (5): BearID, Lat, Long, Urea Nitrogen, Creatinine
-## date (1): Capture Date
-## 
-## i Use `spec()` to retrieve the full column specification for this data.
-## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{everything}\NormalTok{(), }\SpecialCharTok{\textasciitilde{}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.))))}
+\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{everything}\NormalTok{(), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.))))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -368,38 +348,33 @@ tidying.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{miss\_var\_summary}\NormalTok{(polar\_bears\_no\_nas)}
+\FunctionTok{gg\_miss\_var}\NormalTok{(polar\_bears)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-7-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears\_clean }\OtherTok{\textless{}{-}}\NormalTok{ polar\_bears }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{na\_if}\NormalTok{(., }\SpecialCharTok{{-}}\DecValTok{999}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{polar\_bears\_clean }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{everything}\NormalTok{(), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.))))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## # A tibble: 14 x 3
-##    variable      n_miss pct_miss
-##    <chr>          <int>    <num>
-##  1 bear_id            0        0
-##  2 capture_date       0        0
-##  3 popn               0        0
-##  4 sex                0        0
-##  5 age_class          0        0
-##  6 mating             0        0
-##  7 denning            0        0
-##  8 den_method         0        0
-##  9 lat                0        0
-## 10 long               0        0
-## 11 no_cubs            0        0
-## 12 cub_age            0        0
-## 13 urea_nitrogen      0        0
-## 14 creatinine         0        0
+## # A tibble: 1 x 11
+##   bear_id capture_date  popn   sex age_class mating denning   lat  long
+##     <int>        <int> <int> <int>     <int>  <int>   <int> <int> <int>
+## 1       0            0     0     0         0      0       0     0     0
+## # i 2 more variables: urea_nitrogen <int>, creatinine <int>
 \end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{polar\_bears\_no\_nas }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{gg\_miss\_var}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-9-1.pdf}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -425,28 +400,28 @@ tidying.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{count}\NormalTok{(sex, }\AttributeTok{sort=}\NormalTok{T)}
+\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{(popn,sex)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## # A tibble: 2 x 2
-##   sex       n
-##   <chr> <int>
-## 1 F       292
-## 2 M       227
+## # A tibble: 4 x 3
+##   popn  sex       n
+##   <chr> <chr> <int>
+## 1 CS    F        80
+## 2 CS    M        73
+## 3 SB    F       212
+## 4 SB    M       154
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{sex))}\SpecialCharTok{+}
-  \FunctionTok{geom\_bar}\NormalTok{()}\SpecialCharTok{+}
-  \FunctionTok{coord\_flip}\NormalTok{()}\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"Observations by sex"}\NormalTok{,}
-       \AttributeTok{x=}\StringTok{"sex"}\NormalTok{,}
-       \AttributeTok{y=}\ConstantTok{NULL}\NormalTok{) }\CommentTok{\#take away the y axis label}
+\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{(popn,sex) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{popn,}\AttributeTok{y=}\NormalTok{n,}\AttributeTok{fill=}\NormalTok{sex)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{position =} \StringTok{"dodge"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"num of polar bears sampled by sex and pop"}\NormalTok{,}\AttributeTok{x =} \StringTok{"pop"}\NormalTok{,}\AttributeTok{y =} \StringTok{"num of bears"}\NormalTok{,}\AttributeTok{fill =} \StringTok{"sex"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -501,49 +476,20 @@ tidying.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{polar\_bears\_line }\OtherTok{\textless{}{-}}\NormalTok{ polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{count}\NormalTok{(capture\_date, }\AttributeTok{sort=}\NormalTok{T)}
+\NormalTok{polar\_bears\_year}\OtherTok{\textless{}{-}}\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{year=}\FunctionTok{year}\NormalTok{(capture\_date))}
 
-\NormalTok{polar\_bears\_line}
+\NormalTok{bears\_by\_year}\OtherTok{\textless{}{-}}\NormalTok{polar\_bears\_year }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{(year,popn)}
+
+\FunctionTok{ggplot}\NormalTok{(bears\_by\_year,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{year,}\AttributeTok{y=}\NormalTok{n,}\AttributeTok{color=}\NormalTok{popn)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"num of polar bears sampled each yr by pop"}\NormalTok{,}\AttributeTok{x =} \StringTok{"yr"}\NormalTok{,}\AttributeTok{y =} \StringTok{"num of Bears"}\NormalTok{,}\AttributeTok{color =} \StringTok{"pop"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## # A tibble: 377 x 2
-##    capture_date     n
-##    <date>       <int>
-##  1 2008-04-26       4
-##  2 2013-04-17       4
-##  3 1984-05-06       3
-##  4 1989-04-01       3
-##  5 1989-04-05       3
-##  6 2002-04-19       3
-##  7 2004-03-31       3
-##  8 2005-04-06       3
-##  9 2005-04-12       3
-## 10 2006-04-21       3
-## # i 367 more rows
-\end{verbatim}
-
-4=yrs on its own 6-7=make new variable to store it as the polarbear gets
-polarbears bc u need those vairables
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{polar\_bears\_line }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{filter}\NormalTok{((capture\_date}\SpecialCharTok{\textgreater{}=}\DecValTok{1980{-}04{-}28}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{capture\_date, }\AttributeTok{y=}\NormalTok{n))}\SpecialCharTok{+}
-  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}
-  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{shape=}\DecValTok{5}\NormalTok{)}\SpecialCharTok{+}
-  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks=}\DecValTok{1985{-}04{-}28}\SpecialCharTok{:}\DecValTok{2016{-}04{-}22}\NormalTok{, }\AttributeTok{minor\_breaks =} \ConstantTok{NULL}\NormalTok{)}\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{angle=}\DecValTok{60}\NormalTok{, }\AttributeTok{hjust=}\DecValTok{1}\NormalTok{))}\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"bears each yr for populations"}\NormalTok{,}
-       \AttributeTok{x=}\StringTok{"Year"}\NormalTok{,}
-       \AttributeTok{y=}\StringTok{"bears captured"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-16-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-15-1.pdf}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -685,18 +631,30 @@ polarbears bc u need those vairables
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fasting10 }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{drop\_na}\NormalTok{(fasting) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#get rid of NA\textquotesingle{}s}
-  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fasting, }\AttributeTok{fill=}\NormalTok{fasting))}\SpecialCharTok{+}
-  \FunctionTok{geom\_bar}\NormalTok{()}\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"fasting bears by year for both populations "}\NormalTok{,}
-       \AttributeTok{x=}\StringTok{"fasting bear"}\NormalTok{,}
-       \AttributeTok{y=}\ConstantTok{NULL}\NormalTok{)}\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position=}\StringTok{"none"}\NormalTok{)}
+\NormalTok{fasting\_year }\OtherTok{\textless{}{-}}\NormalTok{ un\_creat\_ratio }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{year=}\FunctionTok{year}\NormalTok{(capture\_date)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{fasting =} \FunctionTok{case\_when}\NormalTok{(un\_creat\_ratio }\SpecialCharTok{\textless{}=} \DecValTok{10} \SpecialCharTok{\textasciitilde{}} \StringTok{"not fasting"}\NormalTok{,un\_creat\_ratio }\SpecialCharTok{\textgreater{}} \DecValTok{10} \SpecialCharTok{\textasciitilde{}} \StringTok{"fasting"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
-\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-21-1.pdf}}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fasting\_counts }\OtherTok{\textless{}{-}}\NormalTok{ fasting\_year }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(fasting}\SpecialCharTok{==}\StringTok{"fasting"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{(year,popn)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(fasting\_counts,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{year,}\AttributeTok{y=}\NormalTok{n,}\AttributeTok{color=}\NormalTok{popn)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"num of fasting polar bears by yr and popn"}\NormalTok{,}\AttributeTok{x=}\StringTok{"yr"}\NormalTok{,}\AttributeTok{y=}\StringTok{"num of fasting bears"}\NormalTok{,}\AttributeTok{color=}\StringTok{"popn"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{midterm_2_files/figure-latex/unnamed-chunk-22-1.pdf}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -711,64 +669,47 @@ polarbears bc u need those vairables
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{polar\_bears}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # A tibble: 519 x 11
-##    bear_id capture_date popn  sex   age_class mating denning   lat  long
-##      <dbl> <date>       <chr> <chr> <chr>     <chr>  <chr>   <dbl> <dbl>
-##  1    6398 1985-04-28   SB    F     A         no     yes      70.4 -148.
-##  2    6384 1991-04-13   SB    F     A         no     yes      70.0 -150.
-##  3    6520 1992-04-18   SB    F     A         no     yes      70.9 -145.
-##  4    6559 2000-04-12   SB    F     A         no     yes      70.0 -142.
-##  5   20629 2003-04-16   SB    F     A         no     yes      70.5 -145.
-##  6   20876 2007-04-01   SB    F     A         no     yes      71.1 -153.
-##  7   20354 2009-04-16   SB    F     A         no     yes      70.7 -145.
-##  8   21024 2009-04-25   SB    F     A         no     yes      70.5 -147.
-##  9   20764 2009-05-01   SB    F     A         no     yes      70.8 -149.
-## 10   21045 2009-05-19   SB    F     A         no     yes      70.7 -148.
-## # i 509 more rows
-## # i 2 more variables: urea_nitrogen <dbl>, creatinine <dbl>
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{polar\_dups }\OtherTok{\textless{}{-}}\NormalTok{ polar\_bears }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{distinct}\NormalTok{(popn, }\AttributeTok{.keep\_all =} \ConstantTok{TRUE}\NormalTok{) }
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{polar\_dups }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{select}\NormalTok{(popn) }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{polar\_bears }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(long, lat) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{summary}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##      popn          
-##  Length:2          
-##  Class :character  
-##  Mode  :character
+##       long             lat       
+##  Min.   :-172.2   Min.   :62.46  
+##  1st Qu.:-165.2   1st Qu.:68.11  
+##  Median :-150.7   Median :70.53  
+##  Mean   :-153.7   Mean   :69.86  
+##  3rd Qu.:-146.5   3rd Qu.:71.00  
+##  Max.   :-134.8   Max.   :72.70
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\#bbox2 \textless{}{-} make\_bbox(popn, f=0.3)}
+\NormalTok{long }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{172.2}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{134.8}\NormalTok{) }
+\NormalTok{lat }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{62.46}\NormalTok{, }\FloatTok{72.70}\NormalTok{) }
+\NormalTok{bbox2 }\OtherTok{\textless{}{-}} \FunctionTok{make\_bbox}\NormalTok{(long, lat, }\AttributeTok{f=}\FloatTok{0.3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\#map2 \textless{}{-} get\_stadiamap(bbox2, maptype = "stamen\_terrain", zoom=7)}
-\CommentTok{\#ggmap(map2)}
+\CommentTok{\#map2 \textless{}{-} get\_stadiamap(bbox2, maptype = "stamen\_terrain", zoom = 3)}
+\end{Highlighting}
+\end{Shaded}
 
-\CommentTok{\#ggmap(map2)+}
-\CommentTok{\#  geom\_point(data=sharks\_dups, aes(color=popn), size=0.8)+}
-\CommentTok{\#  labs(x="Longitude", y="Latitude", title="popn")}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#ggmap(map2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#ggmap(map2) +}
+\CommentTok{\#  geom\_point(data = polar\_bears,aes(x = long, y = lat, color = popn),size = 1.5,alpha = 0.7) +}
+\CommentTok{\#  labs(x = "long",y = "lat",title = "loc of polar bears in the study",color = "pop")}
 \end{Highlighting}
 \end{Shaded}
 
@@ -786,20 +727,39 @@ polarbears bc u need those vairables
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(shiny)}
+\FunctionTok{library}\NormalTok{(shinydashboard)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'shinydashboard'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:graphics':
+## 
+##     box
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{polar\_bears }\OtherTok{\textless{}{-}} 
   \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/polarBear\_serumUreaCreatinine\_beaufortChukchi\_rode.csv"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{clean\_names}\NormalTok{()}
+  \FunctionTok{clean\_names}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{un\_creat\_ratio=}\NormalTok{(urea\_nitrogen}\SpecialCharTok{*}\FloatTok{0.466}\NormalTok{)}\SpecialCharTok{/}\NormalTok{creatinine)}
 
-\NormalTok{ui }\OtherTok{\textless{}{-}} \FunctionTok{dashboardPage}\NormalTok{(}
-  
-  \FunctionTok{dashboardHeader}\NormalTok{(}\AttributeTok{title =} \StringTok{"range of un\_creat\_ratio values for both populations"}\NormalTok{),}
+\NormalTok{ui}\OtherTok{\textless{}{-}}\FunctionTok{dashboardPage}\NormalTok{(}
+
+  \FunctionTok{dashboardHeader}\NormalTok{(}\AttributeTok{title =} \StringTok{"range of un\_creat\_ratio for polar bear pop"}\NormalTok{),}
   
   \FunctionTok{dashboardSidebar}\NormalTok{(}
     
-    \FunctionTok{selectInput}\NormalTok{(}\StringTok{"y"}\NormalTok{,}
-                \StringTok{"Select Variable"}\NormalTok{,}
+    \FunctionTok{selectInput}\NormalTok{(}\StringTok{"fill\_var"}\NormalTok{,}
+                \StringTok{"Select Fill Variable"}\NormalTok{,}
                 \AttributeTok{choices =} \FunctionTok{c}\NormalTok{(}\StringTok{"sex"}\NormalTok{, }\StringTok{"mating"}\NormalTok{, }\StringTok{"age\_class"}\NormalTok{, }\StringTok{"denning"}\NormalTok{, }\StringTok{"fasting"}\NormalTok{),}
-                \AttributeTok{selected =} \StringTok{"popn"}\NormalTok{)}
+                \AttributeTok{selected =} \StringTok{"sex"}\NormalTok{)}
     
 \NormalTok{  ),}
   
@@ -808,7 +768,6 @@ polarbears bc u need those vairables
     \FunctionTok{plotOutput}\NormalTok{(}\StringTok{"plot"}\NormalTok{, }\AttributeTok{width =} \StringTok{"600px"}\NormalTok{, }\AttributeTok{height =} \StringTok{"500px"}\NormalTok{)}
     
 \NormalTok{  )}
-  
 \NormalTok{)}
 
 \NormalTok{server }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(input, output, session) \{}
@@ -816,18 +775,17 @@ polarbears bc u need those vairables
 \NormalTok{  output}\SpecialCharTok{$}\NormalTok{plot }\OtherTok{\textless{}{-}} \FunctionTok{renderPlot}\NormalTok{(\{}
     
 \NormalTok{    polar\_bears }\SpecialCharTok{\%\textgreater{}\%}
-      \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ un\_creat\_ratio,}
-                 \AttributeTok{y =}\NormalTok{ .data[[input}\SpecialCharTok{$}\NormalTok{y]],}
-                 \AttributeTok{fill =}\NormalTok{ un\_creat\_ratio)) }\SpecialCharTok{+}
+      \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ popn,}
+                 \AttributeTok{y =}\NormalTok{ un\_creat\_ratio,}
+                 \AttributeTok{fill =}\NormalTok{ .data[[input}\SpecialCharTok{$}\NormalTok{fill\_var]])) }\SpecialCharTok{+}
       \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.75}\NormalTok{) }\SpecialCharTok{+}
-      \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"range of un\_creat\_ratio values by popn CS"}\NormalTok{,}
-           \AttributeTok{x =} \StringTok{"CS"}\NormalTok{,}
-           \AttributeTok{y =}\NormalTok{ input}\SpecialCharTok{$}\NormalTok{y,}
-           \AttributeTok{fill =} \StringTok{"CS"}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"range of un\_creat\_ratio by pop"}\NormalTok{,}
+           \AttributeTok{x =} \StringTok{"pop"}\NormalTok{,}
+           \AttributeTok{y =} \StringTok{"un\_creat\_ratio"}\NormalTok{,}
+           \AttributeTok{fill =}\NormalTok{ input}\SpecialCharTok{$}\NormalTok{fill\_var) }\SpecialCharTok{+}
       \FunctionTok{theme\_light}\NormalTok{()}
     
 \NormalTok{  \})}
-  
 \NormalTok{\}}
 
 \FunctionTok{shinyApp}\NormalTok{(ui, server)}

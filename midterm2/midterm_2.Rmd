@@ -2,10 +2,10 @@
 title: "Midterm 2 W26"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: false
   html_document:
     theme: spacelab
+    toc: false
+  pdf_document:
     toc: false
 ---
 
@@ -87,42 +87,46 @@ polar_bears
 #NAs represented as unknown , in mating
 ```
 
-```{r}
-polar_bears_no_nas <- 
-  read_csv("data/polarBear_serumUreaCreatinine_beaufortChukchi_rode.csv", na="-999") %>% 
-  clean_names()
-```
-```{r}
-polar_bears %>% 
-  summarize(across(everything(), ~ sum(is.na(.))))
-```
 
 ```{r}
-miss_var_summary(polar_bears_no_nas)
-```
-```{r}
-polar_bears_no_nas %>% 
-  gg_miss_var()
+polar_bears %>%
+  summarize(across(everything(), ~sum(is.na(.))))
 ```
 
+
+```{r}
+gg_miss_var(polar_bears)
+```
+
+
+```{r}
+polar_bears_clean <- polar_bears %>%
+  mutate(across(where(is.numeric), ~na_if(., -999)))
+```
+
+
+```{r}
+polar_bears_clean %>%
+  summarize(across(everything(), ~sum(is.na(.))))
+```
 3. (6 points) Is sampling even for both sexes? Make a count the shows the number of males and females sampled by population and make a plot to visualize the counts.
 ```{r}
 names(polar_bears)
 ```
 
 ```{r}
-polar_bears %>% 
-  count(sex, sort=T)
+polar_bears %>%
+  count(popn,sex)
 ```
+
 ```{r}
-polar_bears %>% 
-  ggplot(aes(x=sex))+
-  geom_bar()+
-  coord_flip()+
-  labs(title="Observations by sex",
-       x="sex",
-       y=NULL) #take away the y axis label
+polar_bears %>%
+  count(popn,sex) %>%
+  ggplot(aes(x=popn,y=n,fill=sex)) +
+  geom_col(position = "dodge") +
+  labs(title="num of polar bears sampled by sex and pop",x = "pop",y = "num of bears",fill = "sex")
 ```
+
 
 4. (6 points) How many bears were sampled in each year for both populations? Make a line plot(s) to visualize sampling by year for both populations. (hint: you will need to pull apart the date to get the year in its own column)
 ```{r}
@@ -134,25 +138,16 @@ polar_bears
 ```
 
 ```{r}
-polar_bears_line <- polar_bears %>% 
-  count(capture_date, sort=T)
+polar_bears_year<-polar_bears %>%
+  mutate(year=year(capture_date))
 
-polar_bears_line
-```
-4=yrs on its own
-6-7=make new variable to store it as the polarbear gets polarbears bc u need those vairables
+bears_by_year<-polar_bears_year %>%
+  count(year,popn)
 
-```{r}
-polar_bears_line %>% 
-  filter((capture_date>=1980-04-28)) %>% 
-  ggplot(aes(x=capture_date, y=n))+
-  geom_line()+
-  geom_point(shape=5)+
-  scale_x_continuous(breaks=1985-04-28:2016-04-22, minor_breaks = NULL)+
-  theme(axis.text.x = element_text(angle=60, hjust=1))+
-  labs(title="bears each yr for populations",
-       x="Year",
-       y="bears captured")
+ggplot(bears_by_year,aes(x=year,y=n,color=popn)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "num of polar bears sampled each yr by pop",x = "yr",y = "num of Bears",color = "pop")
 ```
 
 
@@ -203,63 +198,78 @@ fasting10
 
 
 8. (6 points) The authors found that the number of fasting bears increased in the SB population but decreased in the CS population. Make a plot(s) that shows the number of fasting bears by year for both populations to visualize this trend.
+
 ```{r}
-fasting10 %>% 
-  drop_na(fasting) %>% #get rid of NA's
-  ggplot(aes(x=fasting, fill=fasting))+
-  geom_bar()+
-  labs(title="fasting bears by year for both populations ",
-       x="fasting bear",
-       y=NULL)+
-  theme(legend.position="none")
+fasting_year <- un_creat_ratio %>%
+  mutate(year=year(capture_date)) %>%
+  mutate(fasting = case_when(un_creat_ratio <= 10 ~ "not fasting",un_creat_ratio > 10 ~ "fasting"))
 ```
+
+
+```{r}
+fasting_counts <- fasting_year %>%
+  filter(fasting=="fasting") %>%
+  count(year,popn)
+```
+
+
+```{r}
+ggplot(fasting_counts,aes(x=year,y=n,color=popn)) +
+  geom_line() +
+  geom_point() +
+  labs(title="num of fasting polar bears by yr and popn",x="yr",y="num of fasting bears",color="popn")
+```
+
 
 9. (8 points) Where are the polar bears used in this study located? Make a static (not leaflet) distribution map that shows the locations of  bears by population. (hint: use `color=popn` in the `aes()` of `geom_point()`)
-```{r}
-polar_bears
-```
 
 ```{r}
-polar_dups <- polar_bears %>% 
-  distinct(popn, .keep_all = TRUE) 
-```
-```{r}
-polar_dups %>% 
-  select(popn) %>% 
+polar_bears %>%
+  select(long, lat) %>%
   summary()
 ```
 ```{r}
-#bbox2 <- make_bbox(popn, f=0.3)
+long <- c(-172.2, -134.8) 
+lat <- c(62.46, 72.70) 
+bbox2 <- make_bbox(long, lat, f=0.3)
+```
+```{r}
+#map2 <- get_stadiamap(bbox2, maptype = "stamen_terrain", zoom = 3)
+```
+```{r}
+#ggmap(map2)
 ```
 
 ```{r}
-
-#map2 <- get_stadiamap(bbox2, maptype = "stamen_terrain", zoom=7)
-#ggmap(map2)
-
-#ggmap(map2)+
-#  geom_point(data=sharks_dups, aes(color=popn), size=0.8)+
-#  labs(x="Longitude", y="Latitude", title="popn")
-
+#ggmap(map2) +
+#  geom_point(data = polar_bears,aes(x = long, y = lat, color = popn),size = 1.5,alpha = 0.7) +
+#  labs(x = "long",y = "lat",title = "loc of polar bears in the study",color = "pop")
 ```
 
 
 10. (10 points) Build a simple shiny app that shows the range of `un_creat_ratio` values for both populations. The user should be able to select the fill variable and choose between sex, mating, age_class, denning, and fasting. Please use the code chunk below so that your exam knits.
+
+```{r}
+library(shiny)
+library(shinydashboard)
+```
+
 ```{r, eval=F, echo=T}
 polar_bears <- 
   read_csv("data/polarBear_serumUreaCreatinine_beaufortChukchi_rode.csv") %>% 
-  clean_names()
+  clean_names() %>%
+  mutate(un_creat_ratio=(urea_nitrogen*0.466)/creatinine)
 
-ui <- dashboardPage(
-  
-  dashboardHeader(title = "range of un_creat_ratio values for both populations"),
+ui<-dashboardPage(
+
+  dashboardHeader(title = "range of un_creat_ratio for polar bear pop"),
   
   dashboardSidebar(
     
-    selectInput("y",
-                "Select Variable",
+    selectInput("fill_var",
+                "Select Fill Variable",
                 choices = c("sex", "mating", "age_class", "denning", "fasting"),
-                selected = "popn")
+                selected = "sex")
     
   ),
   
@@ -268,7 +278,6 @@ ui <- dashboardPage(
     plotOutput("plot", width = "600px", height = "500px")
     
   )
-  
 )
 
 server <- function(input, output, session) {
@@ -276,22 +285,20 @@ server <- function(input, output, session) {
   output$plot <- renderPlot({
     
     polar_bears %>%
-      ggplot(aes(x = un_creat_ratio,
-                 y = .data[[input$y]],
-                 fill = un_creat_ratio)) +
+      ggplot(aes(x = popn,
+                 y = un_creat_ratio,
+                 fill = .data[[input$fill_var]])) +
       geom_boxplot(alpha = 0.75) +
-      labs(title = "range of un_creat_ratio values by popn CS",
-           x = "CS",
-           y = input$y,
-           fill = "CS") +
+      labs(title = "range of un_creat_ratio by pop",
+           x = "pop",
+           y = "un_creat_ratio",
+           fill = input$fill_var) +
       theme_light()
     
   })
-  
 }
 
 shinyApp(ui, server)
-
 ```
 
 ## Submit the Midterm
