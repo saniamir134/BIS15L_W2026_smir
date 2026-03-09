@@ -57,7 +57,10 @@ You will use BLAST, a tool used in real clinical and research microbiology labs,
 
 **2.Perform a blastx search using `goi_01.txt` as the query and the "nr_cluster_seq" database. Download the cluter table results in CSV format, change the name to "goi_01_blastx.csv" in the homework folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastx.**
 ```{r}
+blast_results <- read_csv("data/blast_results/genome01_blastn.csv") %>%
+  clean_names()
 
+blast_results
 ```
 
 ```{r}
