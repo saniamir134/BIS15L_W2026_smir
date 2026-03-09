@@ -20,11 +20,13 @@ Make sure to use the formatting conventions of RMarkdown to make your report nea
 
 ### Install Biostrings
 ```{r,bquiet=TRUE, message=FALSE, warning=FALSE}
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
+#if (!requireNamespace("BiocManager", quietly = TRUE))
+#  install.packages("BiocManager")
 
-BiocManager::install("Biostrings")
+#BiocManager::install("Biostrings")
 ```
+
+
 ## Load the libraries
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -46,78 +48,99 @@ You will use BLAST, a tool used in real clinical and research microbiology labs,
 **SKIP #1**
 
 **1. Read the "gene of interest" sequence from the `goi_01.txt` file into R using the Biostrings package. Store this in an object called `query_seq`.What type sequence is this? (DNA, RNA or Protien) **
-```{r}
-
-```
-
-```{r}
-
-```
 
 
 **2.Perform a blastx search using `goi_01.txt` as the query and the "nr_cluster_seq" database. Download the cluter table results in CSV format, change the name to "goi_01_blastx.csv" in the homework folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastx.**
 ```{r}
-blast_results <- read_csv("data/blast_results/genome01_blastn.csv") %>%
+getwd()
+goi_01_blastx <- read_csv("goi_01_blastx.csv") %>%
   clean_names()
 
-blast_results
-```
-
-```{r}
-
+goi_01_blastx
 ```
 
 **3.Display the top 10 blastx hits, based on e_value, for this blastx search? (Include the Scientific Name, Cluster Anscestor, Cluster Representative Sequence, Max Score, Query Cover, E value and Percent Identity)**
 ```{r}
+top10_blastx <- goi_01_blastx %>%
+  slice_min(order_by = e_value, n = 10) %>% 
+  select(
+    cluster_ancestor,
+    representative_sequence,
+    total_score,
+    query_cover,
+    e_value,
+    per_ident)
 
+top10_blastx
 ```
  
 
 **4. create a plot that shows the different in percent identity for each Scientific Name of the top 10 blastx hits. Make sure to label your axes and give your plot a title.**
 ```{r}
+library(ggplot2)
 
+ggplot(top10_blastx, aes(x = cluster_ancestor,
+                        y = per_ident)) +
+  geom_col() +
+  labs(
+    title = "Percent Identity of Top 10 BLASTx Hits",
+    x = "Scientific Name",
+    y = "Percent Identity"
+  ) +
+  theme_minimal() +
+  coord_flip()
 ```
 
 
 **5 Perform a blastn search using `goi_01.txt` as the query and the "core_nt" database. Download the alignment description in CSV format, change the name to "goi_01_blastn.csv" in the homework folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastn.**
 ```{r}
+goi_01_blastn <- read_csv("goi_01_blastn.csv") %>%
+  clean_names()
 
+goi_01_blastn
 ```
 
-```{r}
-
-```
 
 **6. What was the top blastn hit, based on e_value, for this blastn search? (Include the Cluster Ancestor, Cluster Representative Sequence, Max Score, Query Cover, E value, Percent Identity and Accession Link)**
 ```{r}
+top_blastn <- goi_01_blastn %>%
+  slice_min(order_by = e_value, n = 1) %>%
+  select(scientific_name,
+         max_score,
+         total_score,
+         query_cover,
+         e_value,
+         per_ident,
+         acc_len)
 
+top_blastn
 ```
 
 **7. Based on the blastx and blastn results, what do you think this gene is and what bacteria do you think it came from?**
-```{}
 
-```
+#The top result is Yersinia pestis meaning that this gene of interest we ran is highly similar to a gene found in this bacteria
 
 **8. For the top blastn hit, click on the accession link for this bacteria and download the coding sequences as a FASTA Protein file. Read the fasta file into R using the Biostrings package and store it in an object called `goi_blastn_hit`.**
 ```{r}
+goi_blastn_hit <- readAAStringSet("seqdump.txt")
 
+goi_blastn_hit
 ```
 
-```{r}
-
-```
 
 **9. From the same organism, identify 5 other annotated genes? Do these genes suggest about the biology or virulence of this bacterium?** *Annotated genes can be found in the "CDS" section of the GenBank file. You can also find genes by going to summary page for the organism and looking at the "View annotated genes" section.*
 ```{r}
+#dnaE: DNA polymerase III alpha subunit;involved in DNA replication, istA: insertion sequence transposase A;may play a role in genome rearrangements, istB: insertion sequence transposase B; may contribute to horizontal gene transfer, 5063..5671: hypothetical protein;function unknown but could affect cellular processes, 5973..8861: hypothetical protein;potential involvement in virulence or metabolism
 
+# These genes suggest that Yersinia pestis has mechanisms for: DNA replication and repair (dnaE), Genome plasticity and mobility (istA, istB), Potential virulence factors or metabolic proteins (the hypothetical proteins)
 ```
 
 
 **10. Now that you have an idea of this bacteria's identity, what illness/disease do you think the patient has? What is the historical or public health significance of this disease? Based on the gene you identified, what role might this gene play in pathogenicity?**
-```{}
 
+```{r}
+#Yersinia pestis causes plague (bubonic, septicemic, and pneumonic forms). Responsible for major pandemics, including the Black Death. Still monitored today in endemic areas. It may contribute to pathogenicity by aiding in host invasion, immune system evasion, or bacterial survival.
 ```
-
 
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean! 
